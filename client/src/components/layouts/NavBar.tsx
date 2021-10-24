@@ -10,8 +10,23 @@ import Stack from "@mui/material/Stack";
 import { styled } from "@mui/material/styles";
 
 import routes from "../../utils/routes";
+import { logout } from "../../redux/slices/adminSlide";
+import { useDispatch } from "react-redux";
 
 const NavBarLink = styled(NavLink)(({ theme }) => ({
+  color: theme.palette.primary.main,
+  textDecoration: "none",
+  padding: 12,
+  borderRadius: 12,
+  fontFamily: `'Raleway','sans-serif'`,
+  fontSize: theme.typography.subtitle1.fontSize,
+  "&:hover": {
+    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.primary.contrastText,
+  },
+}));
+
+const LogOutLink = styled(Link)(({ theme }) => ({
   color: theme.palette.primary.main,
   textDecoration: "none",
   padding: 12,
@@ -34,6 +49,7 @@ const NavBarTitle = styled(NavLink)(({ theme }) => ({
 }));
 
 const NavBar = () => {
+  const dispatch = useDispatch();
   return (
     <AppBar
       color="default"
@@ -56,6 +72,7 @@ const NavBar = () => {
                 {rt.name}
               </NavBarLink>
             ))}
+          <LogOutLink onClick={() => dispatch(logout())}>Logout</LogOutLink>
         </Stack>
         <IconButton
           size="large"

@@ -18,12 +18,15 @@ const initialState: BoardSliceState = {
   errors: "",
 };
 
-export const fetchBoards = createAsyncThunk("loadBoards", async () => {
-  const { data }: AxiosResponse<BoardApiResponse> = await axios.get(
-    "http:localhost:5000/api/admin/boards"
-  );
-  return data.boards;
-});
+export const fetchBoards = createAsyncThunk(
+  "loadBoards",
+  async (adminId: any) => {
+    const { data }: AxiosResponse<BoardApiResponse> = await axios.get(
+      `http://localhost:5000/api/admin/boards/${adminId}`
+    );
+    return data.boards;
+  }
+);
 
 export const boardSlice = createSlice({
   name: "board",

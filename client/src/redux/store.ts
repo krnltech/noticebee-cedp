@@ -1,10 +1,14 @@
 import { configureStore } from "@reduxjs/toolkit";
+import adminSlice from "./slices/adminSlide";
 import boardSlice from "./slices/boardSlice";
+import messageSlice from "./slices/messageSlice";
 // ...
 
 export const store = configureStore({
   reducer: {
     boards: boardSlice,
+    admins: adminSlice,
+    message: messageSlice,
   },
   devTools: true,
 });

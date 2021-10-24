@@ -1,31 +1,45 @@
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
+import { LoginResponse } from "../interface/Axios.interface";
+import jwt_decode, { JwtPayload } from "jwt-decode";
+import // removeCurrentUser,
+// setCurrentUser,
+"../../redux/slices/adminSlide";
 
-const API_URL = "http://localhost:8080/api/auth/";
+export const login = async (email: string, password: string) => {
+  try {
+    const { data }: AxiosResponse<LoginResponse> = await axios.post(
+      "http://localhost:5000/api/admin/login",
+      {
+        email,
+        password,
+      }
+    );
 
-const login = async (username: string, password: string) => {
-  return axios
-    .post(API_URL + "signin", {
-      username,
-      password,
-    })
-    .then((response) => {
-      //   if (response.data.accessToken) {
-      //     localStorage.setItem("user", JSON.stringify(response.data));
-      //   }
-      //   return response.data;
-    });
+    if (data.accessToken) {
+      localStorage.setItem(
+        "noticebee-cedp-admin",
+        JSON.stringify(data.accessToken)
+      );
+    }
+    console.log(data);
+    // dispatch(setCurrentUser());
+    return data.message;
+  } catch (error: any) {
+    console.log(error);
+    return error.message;
+  }
 };
 
-const logout = () => {
-  localStorage.removeItem("user");
+export const logout = () => async (dispatch: any) => {
+  return localStorage.removeItem("noticebee-cedp-admin");
+  // return dispatch(removeCurrentUser());
 };
 
-const getCurrentUser = () => {
-  //   return JSON.parse(localStorage.getItem("user"));
+export const getCurrentUser = () => {
+  let token = localStorage.getItem("noticebee-cedp-admin") || "";
+  const user = jwt_decode<JwtPayload>(token) || null;
+
+  return user;
 };
 
-export default {
-  login,
-  logout,
-  getCurrentUser,
-};
+// console.log(getCurrentUser());
