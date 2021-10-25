@@ -1,14 +1,6 @@
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { selectAdmin } from "../redux/slices/adminSlide";
-import { fetchBoards } from "../redux/slices/boardSlice";
+import { useEffect, FC } from "react";
 
-const Dashboard = () => {
-  const dispatch = useDispatch();
-  const { admin } = useSelector(selectAdmin);
-  useEffect(() => {
-    dispatch(fetchBoards(admin.id));
-  }, []);
+const Dashboard: FC = () => {
   return (
     <div>
       <h1>Dash</h1>

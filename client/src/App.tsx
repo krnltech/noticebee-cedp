@@ -4,16 +4,19 @@ import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import "./App.css";
 import NavBar from "./components/layouts/NavBar";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import routes from "./utils/routes";
 import { selectAdmin } from "./redux/slices/adminSlide";
 import Login from "./components/auth/Login";
-// import { checkCurrentuser } from "./redux/slices/adminSlide";
+import { fetchBoards } from "./redux/slices/boardSlice";
 
 function App() {
   const { isAuthenticated } = useSelector(selectAdmin);
+  const dispatch = useDispatch();
+  const { admin } = useSelector(selectAdmin);
+
   useEffect(() => {
-    // checkCurrentuser();
+    dispatch(fetchBoards(admin.id));
   }, []);
   return (
     <Box sx={{ margin: 0 }}>
