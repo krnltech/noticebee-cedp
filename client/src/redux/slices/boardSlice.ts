@@ -5,6 +5,7 @@ import {
   BoardApiResponse,
 } from "../../utils/interface/Boards.interface";
 import type { RootState } from "../store";
+import { logout } from "./adminSlide";
 
 interface BoardSliceState {
   boards: Board[];
@@ -33,6 +34,17 @@ export const boardSlice = createSlice({
   // `createSlice` will infer the state type from the `initialState` argument
   initialState,
   reducers: {
+    setLoading: (state, action: PayloadAction<boolean>) => {
+      state.isLoading = action.payload;
+    },
+    setBoards: (state, action: PayloadAction<Board[]>) => {
+      state.isLoading = false;
+      state.boards = action.payload;
+    },
+    setError: (state, action: PayloadAction<string>) => {
+      state.isLoading = false;
+      state.errors = action.payload;
+    },
     // Use the PayloadAction type to declare the contents of `action.payload`
     // setLoading: (state, action: PayloadAction<boolean>) => {
     //   state.isLoading = action.payload;
@@ -56,9 +68,15 @@ export const boardSlice = createSlice({
       state.errors = error.message || "";
       state.isLoading = false;
     });
+    builder.addCase(logout.fulfilled, (state) => {
+      state.errors = "";
+      state.isLoading = false;
+      state.boards = [];
+    });
   },
 });
 
+export const { setLoading } = boardSlice.actions;
 export const selectBoard = (state: RootState) => state.boards;
 
 export default boardSlice.reducer;

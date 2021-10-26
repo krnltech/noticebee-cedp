@@ -6,6 +6,7 @@ import type { RootState } from "../store";
 import jwt_decode, { JwtPayload } from "jwt-decode";
 import { LoginResponse } from "../../utils/interface/Axios.interface";
 import { setMessage } from "./messageSlice";
+import { fetchBoards } from "./boardSlice";
 
 interface AdminSliceState {
   admin: AdminLocal;
@@ -16,10 +17,8 @@ type LoginType = {
   email: string;
   password: string;
 };
-
-const admin = jwt_decode<JwtPayload>(
-  localStorage.getItem("noticebee-cedp-admin") || ""
-);
+const token = localStorage.getItem("noticebee-cedp-admin");
+const admin = token ? jwt_decode<AdminLocal>(token) : {};
 
 // const initialState = user
 //   ? { isLoggedIn: true, user }
@@ -48,7 +47,7 @@ export const login = createAsyncThunk(
         );
         let admin = jwt_decode<JwtPayload>(data.accessToken);
         console.log(data);
-        return admin;
+        // return admin;
       }
       // dispatch(setCurrentUser());
       //   return data.message;
