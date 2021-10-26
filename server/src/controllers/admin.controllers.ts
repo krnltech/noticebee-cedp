@@ -61,7 +61,7 @@ export const getBoards = async (req: Request, res: Response) => {
     //   select: "_id",
     //   model: OrganizationModel,
     // });
-    if (admin?.role === "master") {
+    if (admin?.role === "central") {
       const organization = await OrganizationModel.findOne({
         _id: admin.organization,
       })
@@ -71,7 +71,7 @@ export const getBoards = async (req: Request, res: Response) => {
           select: "_id name",
           model: BoardModel,
         });
-      console.log(organization);
+      // console.log(organization);
       res.json({ boards: organization?.boards });
     } else {
       res.json({ boards: admin?.boards || [] });
