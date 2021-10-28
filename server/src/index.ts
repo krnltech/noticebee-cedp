@@ -7,7 +7,6 @@ import { Server } from "socket.io";
 import { createAdapter } from "@socket.io/redis-adapter";
 import { createClient } from "redis";
 import OrganizationModel from "./models/organization.model";
-import { SocketAddress } from "net";
 import AdminModel from "./models/admin.model";
 import BoardModel from "./models/board.model";
 
@@ -46,26 +45,24 @@ const checkForOrganization = async (id: string, type: string, cid: string) => {
 };
 
 io.adapter(createAdapter(pubClient, subClient));
-const nbn = io.of("/socket");
-nbn.on("connection", async (socket) => {
-  const orgId =
-    socket.handshake.query["organization"]?.toString() || "nodOrgId";
-  const connectorType = socket.handshake.query["type"]?.toString() || "nobody";
-  const connectorId =
-    socket.handshake.query["connectorId"]?.toString() || "noId";
+// const nbn = io;
+io.on("connection", async (socket) => {
+  console.log(socket.handshake.auth.identity.id || "");
+  const orgId = socket.handshake.auth.org || "nodOrgId";
+  const connectorType = socket.handshake.auth.identity.type || "nobody";
+  const connectorId = socket.handshake.auth.identity.id || "noId";
   const checkConnectionValidity = await checkForOrganization(
     orgId,
     connectorType,
     connectorId
   );
   if (checkConnectionValidity) {
-    socket.handshake.auth = { orgId, connectorType, connectorId };
     socket.join(orgId);
   } else {
     socket.disconnect(true);
   }
   socket.on("hello", (args) => {
-    console.log(socket);
+    // console.log(socket);
 
     socket
       .to(orgId)
@@ -83,6 +80,34 @@ server.listen(5000, async () => {
     await mongoose.connect(
       "mongodb+srv://noticebee-cedp:krnl2021@krishibee.lyalt.mongodb.net/noticebee-cedp?retryWrites=true&w=majority"
     );
+    io.on("connection", async (socket) => {
+      console.log(socket.handshake.auth.identity.id || "");
+      const orgId = socket.handshake.auth.org || "nodOrgId";
+      const connectorType = socket.handshake.auth.identity.type || "nobody";
+      const connectorId = socket.handshake.auth.identity.id || "noId";
+      const checkConnectionValidity = await checkForOrganization(
+        orgId,
+        connectorType,
+        connectorId
+      );
+      if (checkConnectionValidity) {
+        socket.join(orgId);
+        socket.on("hello", (args) => {
+          // console.log(socket);
+
+          socket
+            .to(orgId)
+            .emit("hello", { args, orgId, auth: socket.handshake.auth });
+        });
+
+        socket.on("update", (args) => {
+          // console.log(args);
+          socket.to(orgId).emit("update", { args, orgId });
+        });
+      } else {
+        socket.disconnect(true);
+      }
+    });
   } catch (error: any) {
     console.log(error.message);
   }

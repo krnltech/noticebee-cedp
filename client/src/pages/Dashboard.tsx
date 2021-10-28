@@ -1,4 +1,4 @@
-import { useEffect, FC } from "react";
+import { FC } from "react";
 
 const Dashboard: FC = () => {
   return (

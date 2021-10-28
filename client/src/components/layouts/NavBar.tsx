@@ -1,7 +1,5 @@
 import { Link as NavLink } from "react-router-dom";
 import AppBar from "@mui/material/AppBar";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
 import Link from "@mui/material/Link";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
@@ -10,8 +8,9 @@ import Stack from "@mui/material/Stack";
 import { styled } from "@mui/material/styles";
 
 import routes from "../../utils/routes";
-import { logout } from "../../redux/slices/adminSlide";
-import { useDispatch } from "react-redux";
+import { selectAdmin, setCurrentUser } from "../../redux/slices/adminSlide";
+import { clearBoards } from "../../redux/slices/boardSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const NavBarLink = styled(NavLink)(({ theme }) => ({
   color: theme.palette.primary.main,
@@ -50,6 +49,12 @@ const NavBarTitle = styled(NavLink)(({ theme }) => ({
 
 const NavBar = () => {
   const dispatch = useDispatch();
+  const { isAuthenticated } = useSelector(selectAdmin);
+  const handleLogout = () => {
+    dispatch(clearBoards());
+    dispatch(setCurrentUser({}));
+    localStorage.removeItem("noticebee-cedp-admin");
+  };
   return (
     <AppBar
       color="default"
@@ -67,12 +72,15 @@ const NavBar = () => {
         >
           {routes
             .filter((rt) => rt.navbar)
+            .filter((rt) => (isAuthenticated ? rt.private : !rt.private))
             .map((rt, id) => (
               <NavBarLink key={id} to={rt.path}>
                 {rt.name}
               </NavBarLink>
             ))}
-          <LogOutLink onClick={() => dispatch(logout())}>Logout</LogOutLink>
+          {isAuthenticated && (
+            <LogOutLink onClick={handleLogout}>Logout</LogOutLink>
+          )}
         </Stack>
         <IconButton
           size="large"

@@ -5,7 +5,6 @@ import {
   BoardApiResponse,
 } from "../../utils/interface/Boards.interface";
 import type { RootState } from "../store";
-import { logout } from "./adminSlide";
 
 interface BoardSliceState {
   boards: Board[];
@@ -34,49 +33,28 @@ export const boardSlice = createSlice({
   // `createSlice` will infer the state type from the `initialState` argument
   initialState,
   reducers: {
-    setLoading: (state, action: PayloadAction<boolean>) => {
+    setBoardsLoading: (state, action: PayloadAction<boolean>) => {
       state.isLoading = action.payload;
     },
     setBoards: (state, action: PayloadAction<Board[]>) => {
       state.isLoading = false;
       state.boards = action.payload;
+      state.errors = "";
     },
-    setError: (state, action: PayloadAction<string>) => {
+    setBoardsError: (state, action: PayloadAction<string>) => {
       state.isLoading = false;
       state.errors = action.payload;
     },
-    // Use the PayloadAction type to declare the contents of `action.payload`
-    // setLoading: (state, action: PayloadAction<boolean>) => {
-    //   state.isLoading = action.payload;
-    // },
-    // setErrors: (state, action: PayloadAction<string>) => {
-    //   state.errors = action.payload;
-    // },
-    // setBoards: (state, action: PayloadAction<Board[]>) => {
-    //   state.boards = action.payload;
-    // },
-  },
-  extraReducers: (builder) => {
-    builder.addCase(fetchBoards.pending, (state) => {
-      state.isLoading = true;
-    });
-    builder.addCase(fetchBoards.fulfilled, (state, { payload }) => {
-      state.isLoading = false;
-      state.boards = payload;
-    });
-    builder.addCase(fetchBoards.rejected, (state, { error }) => {
-      state.errors = error.message || "";
-      state.isLoading = false;
-    });
-    builder.addCase(logout.fulfilled, (state) => {
-      state.errors = "";
+    clearBoards: (state) => {
       state.isLoading = false;
       state.boards = [];
-    });
+      state.errors = "";
+    },
   },
 });
 
-export const { setLoading } = boardSlice.actions;
+export const { setBoardsLoading, setBoards, setBoardsError, clearBoards } =
+  boardSlice.actions;
 export const selectBoard = (state: RootState) => state.boards;
 
 export default boardSlice.reducer;

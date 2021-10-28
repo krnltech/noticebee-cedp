@@ -6,34 +6,53 @@ import "./App.css";
 import NavBar from "./components/layouts/NavBar";
 import { useDispatch, useSelector } from "react-redux";
 import routes from "./utils/routes";
-import { selectAdmin } from "./redux/slices/adminSlide";
-import Login from "./components/auth/Login";
-import { fetchBoards } from "./redux/slices/boardSlice";
+import { selectAdmin, setCurrentUser } from "./redux/slices/adminSlide";
+import { withRouter } from "react-router";
+import PrivateRoute from "./components/auth/PrivateRoute";
+import { getCurrentUser } from "./api/auth.api";
+import { createConnection } from "./api/socket.api";
 
 function App() {
-  const { isAuthenticated } = useSelector(selectAdmin);
   const dispatch = useDispatch();
   const { admin } = useSelector(selectAdmin);
-
   useEffect(() => {
-    dispatch(fetchBoards(admin.id));
+    if (admin.id) {
+      const io = createConnection(admin.org || "", {
+        id: admin.id,
+        type: "admin",
+      });
+    }
+    dispatch(setCurrentUser(getCurrentUser()));
   }, []);
   return (
     <Box sx={{ margin: 0 }}>
       <NavBar />
       <Container maxWidth="xl">
-        {isAuthenticated ? (
-          <Switch>
-            {routes.map((rt, id) => (
-              <Route exact key={id} path={rt.path} component={rt.component} />
+        <Switch>
+          {routes
+            .filter((rt) => rt.private)
+            .map((rt, id) => (
+              <PrivateRoute
+                key={id}
+                exact={true}
+                path={rt.path}
+                component={rt.component}
+              />
             ))}
-          </Switch>
-        ) : (
-          <Login />
-        )}
+          {routes
+            .filter((rt) => !rt.private)
+            .map((rt, id) => (
+              <Route
+                key={id}
+                exact={true}
+                path={rt.path}
+                component={rt.component}
+              />
+            ))}
+        </Switch>
       </Container>
     </Box>
   );
 }
 
-export default App;
+export default withRouter(App);

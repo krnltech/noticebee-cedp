@@ -2,23 +2,29 @@ import { FC, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import BoardComponent from "../components/boards/BoardComponent";
 import { selectAdmin } from "../redux/slices/adminSlide";
-import { fetchBoards, selectBoard } from "../redux/slices/boardSlice";
-
+import { selectBoard } from "../redux/slices/boardSlice";
+import { fetchBoards } from "../api/boards.api";
 const Boards: FC = () => {
-  const { boards } = useSelector(selectBoard);
+  const { boards, isLoading } = useSelector(selectBoard);
+  const { admin } = useSelector(selectAdmin);
   const dispatch = useDispatch();
-  const { admin, isAuthenticated } = useSelector(selectAdmin);
-
   useEffect(() => {
     if (admin.id) {
-      dispatch(fetchBoards(admin.id));
+      fetchBoards(admin.id, dispatch);
     }
-  }, []);
+  }, [admin]);
   return (
     <div>
-      {boards.map((board, id) => (
-        <BoardComponent board={board} key={id} />
-      ))}
+      <h1>All boards</h1>
+      {isLoading ? (
+        <p>loading . . .</p>
+      ) : (
+        <>
+          {boards.map((board, id) => (
+            <BoardComponent board={board} key={id} />
+          ))}
+        </>
+      )}
     </div>
   );
 };

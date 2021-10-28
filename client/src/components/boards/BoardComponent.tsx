@@ -1,6 +1,7 @@
+import { FC } from "react";
 import { Container } from "@mui/material";
 import Paper from "@mui/material/Paper";
-import { FC } from "react";
+
 import { Board } from "../../utils/interface/Boards.interface";
 
 type Prop = {
