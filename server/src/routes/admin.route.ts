@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { getBoards, loginAdmin } from "../controllers/admin.controllers";
 const r = Router();
+import { getBoards, loginAdmin } from "../controllers/admin.controllers";
 
 r.post("/login", loginAdmin);
 r.get("/boards/:adminId", getBoards);

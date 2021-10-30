@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import adminRoute from "./routes/admin.route";
+import assetRoute from "./routes/admin.route";
 import mongoose from "mongoose";
 import { createServer } from "http";
 import { Server } from "socket.io";
@@ -15,6 +16,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/api/admin", adminRoute);
+app.use("/api/asset", assetRoute);
 
 mongoose.connection.on("error", (err) => {
   console.log(err.message);

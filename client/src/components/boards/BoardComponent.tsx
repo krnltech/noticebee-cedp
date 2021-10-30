@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { Container } from "@mui/material";
+import { Container, Typography } from "@mui/material";
 import Paper from "@mui/material/Paper";
 
 import { Board } from "../../utils/interface/Boards.interface";
@@ -13,9 +13,9 @@ const BoardComponent: FC<Prop> = ({ board }) => {
     <Container>
       <Paper>
         <h1>{board.name}</h1>
-        <p>
+        <Typography paragraph ml={1}>
           <b>Status</b> : Online
-        </p>
+        </Typography>
       </Paper>
     </Container>
   );
