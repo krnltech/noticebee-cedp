@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import adminRoute from "./routes/admin.route";
-import assetRoute from "./routes/admin.route";
+import assetRoute from "./routes/asset.route";
 import mongoose from "mongoose";
 import { createServer } from "http";
 import { Server } from "socket.io";
@@ -12,8 +12,8 @@ import AdminModel from "./models/admin.model";
 import BoardModel from "./models/board.model";
 
 const app = express();
-app.use(cors());
 app.use(express.json());
+app.use(cors());
 
 app.use("/api/admin", adminRoute);
 app.use("/api/asset", assetRoute);

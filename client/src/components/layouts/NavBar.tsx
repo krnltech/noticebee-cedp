@@ -11,6 +11,7 @@ import routes from "../../utils/routes";
 import { selectAdmin, setCurrentUser } from "../../redux/slices/adminSlide";
 import { clearBoards } from "../../redux/slices/boardSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { clearAssets } from "../../redux/slices/assetSlice";
 
 const NavBarLink = styled(NavLink)(({ theme }) => ({
   color: theme.palette.primary.main,
@@ -52,6 +53,7 @@ const NavBar = () => {
   const { isAuthenticated } = useSelector(selectAdmin);
   const handleLogout = () => {
     dispatch(clearBoards());
+    dispatch(clearAssets());
     dispatch(setCurrentUser({}));
     localStorage.removeItem("noticebee-cedp-admin");
   };
