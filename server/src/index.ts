@@ -24,8 +24,13 @@ mongoose.connection.on("error", (err) => {
 
 const server = createServer(app);
 
+const { PORT, REDIS_HOST, REDIS_PORT } = process.env;
+
 const io = new Server(server, { transports: ["websocket"] });
-const pubClient = createClient({ host: "localhost", port: 6379 });
+const pubClient = createClient({
+  host: REDIS_HOST || "localhost",
+  port: Number(REDIS_PORT) || 6379,
+});
 const subClient = pubClient.duplicate();
 
 const checkForOrganization = async (id: string, type: string, cid: string) => {
@@ -77,7 +82,7 @@ io.on("connection", async (socket) => {
   });
 });
 
-server.listen(5000, async () => {
+server.listen(PORT || 5000, async () => {
   try {
     await mongoose.connect(
       "mongodb+srv://noticebee-cedp:krnl2021@krishibee.lyalt.mongodb.net/noticebee-cedp?retryWrites=true&w=majority"
@@ -113,5 +118,5 @@ server.listen(5000, async () => {
   } catch (error: any) {
     console.log(error.message);
   }
-  console.log("running on port 5000");
+  console.log("running on port " + PORT || 5000);
 });
