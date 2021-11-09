@@ -6,7 +6,11 @@ import { grey } from "@mui/material/colors";
 import FilesComponent from "./FilesComponent";
 import Stack from "@mui/material/Stack";
 
-const UploadComponent: FC = () => {
+type Prop = {
+  reloadAsset: () => void;
+};
+
+const UploadComponent: FC<Prop> = ({ reloadAsset }) => {
   const [files, setFiles] = useState<File[]>([]);
   const onDrop = useCallback((acceptedFiles) => {
     // Do something with the files
@@ -19,7 +23,10 @@ const UploadComponent: FC = () => {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
   });
-
+  const removeFromList = (name: string) => {
+    reloadAsset();
+    setFiles(files.filter((item) => item.name !== name));
+  };
   useEffect(() => {
     console.log(files);
   }, [files]);
@@ -47,7 +54,10 @@ const UploadComponent: FC = () => {
           </Typography>
         </Box>
       </Box>
-      <FilesComponent files={files} />
+      <FilesComponent
+        files={files}
+        removeFromList={(n: string) => removeFromList(n)}
+      />
     </Stack>
   );
 };

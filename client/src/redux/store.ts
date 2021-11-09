@@ -1,5 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import adminSlice from "./slices/adminSlide";
+import assetSlice from "./slices/assetSlice";
 import boardSlice from "./slices/boardSlice";
 import messageSlice from "./slices/messageSlice";
 // ...
@@ -9,6 +10,7 @@ export const store = configureStore({
     boards: boardSlice,
     admins: adminSlice,
     message: messageSlice,
+    assets: assetSlice,
   },
   devTools: true,
 });
