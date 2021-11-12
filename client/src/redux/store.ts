@@ -3,6 +3,7 @@ import adminSlice from "./slices/adminSlide";
 import assetSlice from "./slices/assetSlice";
 import boardSlice from "./slices/boardSlice";
 import messageSlice from "./slices/messageSlice";
+import noticeSetSlice from "./slices/noticesetSlice";
 // ...
 
 export const store = configureStore({
@@ -11,6 +12,7 @@ export const store = configureStore({
     admins: adminSlice,
     message: messageSlice,
     assets: assetSlice,
+    noticeSets: noticeSetSlice,
   },
   devTools: true,
 });

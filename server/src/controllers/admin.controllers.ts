@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import { Board } from "../interface/boards.interface";
 import AdminModel from "../models/admin.model";
 import BoardModel from "../models/board.model";
+import NoticeSetModel from "../models/noticeset.model";
 import OrganizationModel from "../models/organization.model";
 
 export const loginAdmin = async (req: Request, res: Response) => {
@@ -85,8 +85,72 @@ export const getBoards = async (req: Request, res: Response) => {
   }
 };
 
-// const testFunc = async () => {
-//   const o = await OrganizationModel.find();
-//   console.log(o);
-// };
-// testFunc();
+export const getNoticesets = async (req: Request, res: Response) => {
+  try {
+    const noticesets = await NoticeSetModel.find({
+      _id: req.params.organizationId,
+    })
+      .select("-__v")
+      .populate({ path: "admin", select: "-__v -password", model: AdminModel })
+      .populate({
+        path: "organization",
+        select: "-__v",
+        model: OrganizationModel,
+      });
+    res.json({ noticesets });
+  } catch (error: any) {
+    console.log(error);
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+export const getNoticeset = async (req: Request, res: Response) => {
+  try {
+    const noticeset = await NoticeSetModel.findOne({
+      _id: req.params.noticesetId,
+    })
+      .select("-__v")
+      .populate({ path: "admin", select: "-__v -password", model: AdminModel })
+      .populate({
+        path: "organization",
+        select: "-__v",
+        model: OrganizationModel,
+      });
+    res.json({ noticeset });
+  } catch (error: any) {
+    console.log(error);
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+export const addNoticeset = async (req: Request, res: Response) => {
+  try {
+    const noticeset = new NoticeSetModel(req.body);
+    await noticeset.save();
+    res.json({ message: "Successfully added " + noticeset.name });
+  } catch (error: any) {
+    console.log(error);
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+export const editNoticeset = async (req: Request, res: Response) => {
+  try {
+    await NoticeSetModel.updateOne(
+      { _id: req.params.noticesetId },
+      { $set: req.body }
+    );
+    res.json({ message: "Successfully updated noticeset" });
+  } catch (error: any) {
+    console.log(error);
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
