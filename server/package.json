@@ -18,6 +18,7 @@
     "@types/jsonwebtoken": "^8.5.5",
     "@types/node": "^16.10.9",
     "@types/redis": "^2.8.32",
+    "aws-sdk": "^2.1028.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",

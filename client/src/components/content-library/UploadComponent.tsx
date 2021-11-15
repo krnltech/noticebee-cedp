@@ -45,7 +45,10 @@ const UploadComponent: FC<Prop> = ({ reloadAsset }) => {
           }}
           {...getRootProps()}
         >
-          <input {...getInputProps()} />
+          <input
+            {...getInputProps()}
+            accept="image/*, video/*, application/pdf,application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, .csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel, .pps, application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.presentationml.slideshow, application/vnd.openxmlformats-officedocument.presentationml.presentation"
+          />
 
           <Typography paragraph>
             {isDragActive
@@ -56,6 +59,7 @@ const UploadComponent: FC<Prop> = ({ reloadAsset }) => {
       </Box>
       <FilesComponent
         files={files}
+        reloadAsset={() => reloadAsset()}
         removeFromList={(n: string) => removeFromList(n)}
       />
     </Stack>

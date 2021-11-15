@@ -3,10 +3,17 @@ services:
   noticebee-cedp-api:
     build: server/.
     ports:
-      - "5000:5000"
+      - "8080:8080"
     environment:
-      - PORT=5000
+      - PORT=8080
       - REDIS_HOST=redis
       - REDIS_PORT=6379
   redis:
     image: "redis:alpine"
+  s3cmd:
+    image: "garland/docker-s3cmd"
+    environment:
+      - aws_key=QI6NZMF168674QVS1GIT
+      - aws_secret=XHv3hFZKfQANCTv83qSzsjDLP698hwR1VbVWIfFV
+      - cmd=interactive
+      - SRC_S3=%(bucket)s.ap-south-1.linodeobjects.com

@@ -9,9 +9,10 @@ import CircularProgressWithLabel from "./CircularProgressWithLabel";
 type Prop = {
   file: File;
   removeFromList: (n: string) => void;
+  reloadAsset: () => void;
 };
 
-const SingleFile: FC<Prop> = ({ file, removeFromList }) => {
+const SingleFile: FC<Prop> = ({ file, removeFromList, reloadAsset }) => {
   const [progress, setProgress] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
   const [name, setName] = useState<string>("");
@@ -30,32 +31,24 @@ const SingleFile: FC<Prop> = ({ file, removeFromList }) => {
         let fileName = `File${Math.random().toString(36).slice(2)}.${ext}`;
         let orgId = admin.org as string;
         let adminId = admin.id as string;
-        if (fileResult.byteLength > CHUNK_SIZE) {
-          console.log({ filesize: fileResult.byteLength, chunkCount });
-          let chunks: ArrayBuffer[] = [];
-          for (let chunkId = 0; chunkId < chunkCount; chunkId++) {
-            const chunk = fileResult.slice(
-              chunkId * CHUNK_SIZE,
-              chunkId * CHUNK_SIZE + CHUNK_SIZE
-            );
-            chunks.push(chunk);
-            //   console.log(chunkId);
-          }
-          console.log(chunks.length === chunkCount);
-          for (let i = 0; i < chunks.length; i++) {
-            let route: string;
-            if (i === 0) {
-              route = "start";
-            } else if (i + 1 === chunks.length) {
-              route = "finish";
-            } else {
-              route = "append";
-            }
-            console.log(route);
-
-            const { data } = await axios({
+        // if (fileResult.byteLength > CHUNK_SIZE) {
+        console.log({ filesize: fileResult.byteLength, chunkCount });
+        let chunks: ArrayBuffer[] = [];
+        for (let chunkId = 0; chunkId < chunkCount; chunkId++) {
+          const chunk = fileResult.slice(
+            chunkId * CHUNK_SIZE,
+            chunkId * CHUNK_SIZE + CHUNK_SIZE
+          );
+          chunks.push(chunk);
+          //   console.log(chunkId);
+        }
+        console.log(chunks.length === chunkCount);
+        const axiosRequests = [];
+        for (let i = 0; i < chunks.length; i++) {
+          axiosRequests.push(
+            axios({
               method: "post",
-              url: `http://localhost:5000/api/asset/${route}`,
+              url: `http://localhost:5000/api/asset/append`,
               data: chunks[i],
               headers: {
                 Accept: "Application/JSON",
@@ -67,40 +60,42 @@ const SingleFile: FC<Prop> = ({ file, removeFromList }) => {
                 "x-orgid": orgId,
                 "x-adminid": adminId,
               },
-            });
-            if (data) {
-              let uploadProgress = Math.round((i * 100) / chunks.length);
-              console.log(data, " multi");
-              if (route === "finish") {
-                setProgress(100);
-              } else {
-                setProgress(uploadProgress);
-              }
-            }
-          }
-        } else {
-          const { data } = await axios({
-            method: "post",
-            url: `http://localhost:5000/api/asset/finish`,
-            data: fileResult,
-            headers: {
-              Accept: "Application/JSON",
-              "Access-Control-Allow-Origin": "*",
-              "content-type": "application/octet-stream",
-              // "content-length": chunks[i].byteLength.toString(),
-              "x-name": name,
-              "x-filename": fileName,
-              "x-orgid": orgId,
-              "x-adminId": adminId,
-            },
-          });
-          console.log(data, "single");
+              onUploadProgress: (progressEvent) => console.log(progressEvent),
+            })
+          );
         }
+        axios.all(axiosRequests).then(async (info) => {
+          console.log(info);
+          const { data } = await axios.post(
+            "http://localhost:5000/api/asset/finish",
+            {
+              name,
+              fileName,
+              orgId,
+              adminId,
+            }
+          );
+          if (data) {
+            removeFromList(file.name);
+            reloadAsset();
+          }
+        });
+        // if (data) {
+        //   let uploadProgress = Math.round((i * 100) / chunks.length);
+        //   console.log(data, " multi");
+        //   if (i + 1 === chunks.length) {
+        //     setProgress(100);
+        //   } else {
+        //     setProgress(uploadProgress);
+        //   }
+        // }
+        // } else {
+
+        // }
       };
       if (targetFile) {
         fileReader.readAsArrayBuffer(targetFile);
       }
-      removeFromList(file.name);
     } catch (error: any) {
       console.log(error.message);
     }
