@@ -1,5 +1,5 @@
-import { FC, useEffect } from "react";
-import { Card, Typography } from "@mui/material";
+import { FC, useEffect, useState } from "react";
+import { Button, Card, Typography } from "@mui/material";
 import CardContent from "@mui/material/CardContent";
 
 import { useDispatch, useSelector } from "react-redux";
@@ -7,36 +7,39 @@ import { useDispatch, useSelector } from "react-redux";
 import { selectAdmin } from "../redux/slices/adminSlide";
 import { selectNoticeSet } from "../redux/slices/noticesetSlice";
 import { fetchNoticeSets } from "../api/noticeset.api";
+import AllNoticeSets from "../components/noticesets/AllNoticeSets";
+import AddNoticeSets from "../components/noticesets/AddNoticeSets";
 
 const NoticeSet: FC = () => {
-  // const [addNew, setAddNew] = useState(false);
+  const [addNew, setAddNew] = useState(false);
   const { noticeSets, isLoading } = useSelector(selectNoticeSet);
   const { admin } = useSelector(selectAdmin);
   const dispatch = useDispatch();
-  const reloadAsset = () => {
-    if (admin.org) {
-      fetchNoticeSets(admin.org, dispatch);
+
+  const toggleAddNew = () => {
+    setAddNew((an) => !an);
+  };
+
+  const reloadNoticesets = () => {
+    if (admin.id) {
+      fetchNoticeSets(admin.id, dispatch);
     }
   };
   useEffect(() => {
-    reloadAsset();
+    reloadNoticesets();
   }, [admin]);
-  // all/:adminId
+
   return (
     <div>
       <h1>ContentLibrary</h1>
-      {/* <Button onClick={() => setAddNew((an) => !an)}>
+      <Button onClick={toggleAddNew}>
         {addNew ? "Cancel" : "Add new content"}
-      </Button> */}
-      {/* {assets.map((asset, id) => (
-        <Card key={id} variant="outlined">
-          <CardContent>
-            <Typography variant="h4">{asset.name}</Typography>
-            <Typography variant="subtitle1">{asset.type}</Typography>
-            <Typography variant="body1">{asset.url}</Typography>
-          </CardContent>
-        </Card>
-      ))} */}
+      </Button>
+      {addNew ? (
+        <AddNoticeSets toggleAddNew={() => toggleAddNew()} />
+      ) : (
+        <AllNoticeSets noticeSets={noticeSets} isLoading={isLoading} />
+      )}
     </div>
   );
 };

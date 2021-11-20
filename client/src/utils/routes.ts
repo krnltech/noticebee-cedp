@@ -2,6 +2,8 @@ import Dashboard from "../pages/Dashboard";
 import ContentLibrary from "../pages/ContentLibrary";
 import Boards from "../pages/Boards";
 import Login from "../pages/Login";
+import NoticeSet from "../pages/NoticeSet";
+import EditNoticeSet from "../pages/EditNoticeSet";
 
 export default [
   {
@@ -20,9 +22,16 @@ export default [
   },
   {
     name: "NoticeSets",
-    component: Dashboard,
-    path: "/noticeSets",
+    component: NoticeSet,
+    path: "/noticesets",
     navbar: true,
+    private: true,
+  },
+  {
+    name: "NoticeSets",
+    component: EditNoticeSet,
+    path: "/noticeset/edit/:noticeSetId",
+    navbar: false,
     private: true,
   },
   {

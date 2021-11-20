@@ -7,4 +7,6 @@ export interface NoticeSet {
   endTime: string | null;
   admin: Types.ObjectId;
   organization: Types.ObjectId;
+  shouldSchedule: boolean;
+  assets: Types.ObjectId[];
 }

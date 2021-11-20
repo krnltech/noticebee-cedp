@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import AdminModel from "../models/admin.model";
+import AssetModel from "../models/asset.model";
 import BoardModel from "../models/board.model";
 import NoticeSetModel from "../models/noticeset.model";
 import OrganizationModel from "../models/organization.model";
@@ -88,15 +89,20 @@ export const getBoards = async (req: Request, res: Response) => {
 export const getNoticesets = async (req: Request, res: Response) => {
   try {
     const noticesets = await NoticeSetModel.find({
-      _id: req.params.organizationId,
+      admin: req.params.adminId,
     })
       .select("-__v")
-      .populate({ path: "admin", select: "-__v -password", model: AdminModel })
       .populate({
-        path: "organization",
+        path: "assets",
         select: "-__v",
-        model: OrganizationModel,
+        model: AssetModel,
       });
+    // .populate({ path: "admin", select: "-__v -password", model: AdminModel })
+    // .populate({
+    //   path: "organization",
+    //   select: "-__v",
+    //   model: OrganizationModel,
+    // })
     res.json({ noticesets });
   } catch (error: any) {
     console.log(error);
@@ -117,7 +123,13 @@ export const getNoticeset = async (req: Request, res: Response) => {
         path: "organization",
         select: "-__v",
         model: OrganizationModel,
+      })
+      .populate({
+        path: "assets",
+        select: "-__v",
+        model: AssetModel,
       });
+    // console.log(noticeset);
     res.json({ noticeset });
   } catch (error: any) {
     console.log(error);
@@ -129,6 +141,7 @@ export const getNoticeset = async (req: Request, res: Response) => {
 
 export const addNoticeset = async (req: Request, res: Response) => {
   try {
+    console.log(req.body);
     const noticeset = new NoticeSetModel(req.body);
     await noticeset.save();
     res.json({ message: "Successfully added " + noticeset.name });

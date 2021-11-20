@@ -16,6 +16,16 @@ const NoticeSetSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Organizations",
     },
+    shouldSchedule: {
+      type: Boolean,
+      required: true,
+    },
+    assets: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Assets",
+      },
+    ],
   },
   { timestamps: true }
 );
