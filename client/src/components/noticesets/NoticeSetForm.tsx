@@ -7,10 +7,11 @@ import {
   FormGroup,
   Stack,
   TextField,
+  Typography,
 } from "@mui/material";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { NoticeSetAddFormData } from "../../utils/interface/NoticeSet.interface";
-import { selectAdmin } from "../../redux/slices/adminSlide";
+// import { selectAdmin } from "../../redux/slices/adminSlide";
 import { useSelector } from "react-redux";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import { selectAsset } from "../../redux/slices/assetSlice";
@@ -47,8 +48,9 @@ const NoticeSetForm: FC<Props> = ({
   const [defaultEndDate, setDefaultEndDate] = useState<Date | null>(
     purpose === "add" ? new Date() : new Date()
   );
-  const { admin } = useSelector(selectAdmin);
+  // const { admin } = useSelector(selectAdmin);
   const { assets, isLoading } = useSelector(selectAsset);
+  console.log(defaultvalues);
   const { register, handleSubmit, setValue, watch } = useForm({
     defaultValues: defaultvalues,
   });
@@ -56,16 +58,21 @@ const NoticeSetForm: FC<Props> = ({
 
   const onSubmit: SubmitHandler<NoticeSetAddFormData> = async (formData) => {
     setLoading(true);
-    console.log(formData);
+    // console.log(formData);
     let message: string;
-    if (purpose === "add") {
-      message = await addNoticeset(formData);
-      console.log(message);
-    } else {
-      message = await editNoticeSet(formData, noticeSetId);
+    try {
+      if (purpose === "add") {
+        message = await addNoticeset(formData);
+        console.log(message);
+      } else {
+        message = await editNoticeSet(formData, noticeSetId);
+        console.log(message);
+      }
+    } catch (error: any) {
+      console.log(error.message);
     }
-    console.log(message);
     setLoading(false);
+    closeAction();
   };
 
   return (
@@ -95,7 +102,7 @@ const NoticeSetForm: FC<Props> = ({
             <FormControlLabel
               control={
                 <Checkbox
-                  checked={defaultvalues.shouldSchedule}
+                  defaultChecked={defaultvalues.shouldSchedule}
                   {...register("shouldSchedule")}
                 />
               }
@@ -104,7 +111,7 @@ const NoticeSetForm: FC<Props> = ({
           </FormGroup>
           {shouldSchedule && (
             <LocalizationProvider dateAdapter={AdapterDateFns}>
-              <p>Schedule start time</p>
+              <Typography paragraph>Schedule start time</Typography>
               <DateTimePicker
                 disablePast
                 value={defaultStartDate}
@@ -117,7 +124,7 @@ const NoticeSetForm: FC<Props> = ({
                 // {...register("startTime")}
                 renderInput={(params) => <TextField {...params} />}
               />
-              <p>Schedule end time</p>
+              <Typography paragraph>Schedule end time</Typography>
               <DateTimePicker
                 disablePast
                 value={defaultEndDate}
@@ -134,21 +141,23 @@ const NoticeSetForm: FC<Props> = ({
           )}
         </Stack>
         <Stack direction="column" spacing={2}>
-          <FormGroup sx={{ maxHeight: "800px" }}>
-            {assets.map((asset, id) => (
-              <FormControlLabel
-                key={id}
-                control={
-                  <Checkbox
-                    // checked={defaultvalues.assets.some(asset._id)}
-                    value={asset._id}
-                    {...register("assets")}
-                  />
-                }
-                label={asset.name}
-              />
-            ))}
-          </FormGroup>
+          {!isLoading && (
+            <FormGroup sx={{ maxHeight: "800px" }}>
+              {assets.map((asset, id) => (
+                <FormControlLabel
+                  key={id}
+                  control={
+                    <Checkbox
+                      defaultChecked={defaultvalues.assets.includes(asset._id)}
+                      value={asset._id}
+                      {...register("assets")}
+                    />
+                  }
+                  label={asset.name}
+                />
+              ))}
+            </FormGroup>
+          )}
         </Stack>
       </Stack>
       <FormGroup>

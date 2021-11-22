@@ -25,7 +25,9 @@ const ContentLibrary: FC = () => {
   // all/:adminId
   return (
     <div>
-      <h1>ContentLibrary</h1>
+      <Typography variant="h4" my={1}>
+        Content Library
+      </Typography>
       {/* <Button onClick={() => setAddNew((an) => !an)}>
         {addNew ? "Cancel" : "Add new content"}
       </Button> */}
@@ -33,7 +35,9 @@ const ContentLibrary: FC = () => {
       {assets.map((asset, id) => (
         <Card key={id} variant="outlined">
           <CardContent>
-            <Typography variant="h4">{asset.name}</Typography>
+            <Typography variant="h4" my={1}>
+              {asset.name}
+            </Typography>
             <Typography variant="subtitle1">{asset.type}</Typography>
             <Typography variant="body1">{asset.url}</Typography>
           </CardContent>

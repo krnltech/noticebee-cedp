@@ -3,7 +3,9 @@ import { FC } from "react";
 const Dashboard: FC = () => {
   return (
     <div>
-      <h1>Dash</h1>
+      <Typography variant="h4" my={1}>
+        Dash
+      </Typography>
     </div>
   );
 };

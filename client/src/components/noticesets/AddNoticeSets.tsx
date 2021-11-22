@@ -1,5 +1,5 @@
 import { useEffect, FC } from "react";
-import { Paper } from "@mui/material";
+import { Paper, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { selectAdmin } from "../../redux/slices/adminSlide";
 import { fetchAssets } from "../../api/asset.api";
@@ -7,9 +7,10 @@ import NoticeSetForm from "./NoticeSetForm";
 
 type Prop = {
   toggleAddNew: () => void;
+  reloadNoticesets: () => void;
 };
 
-const AddNoticeSets: FC<Prop> = ({ toggleAddNew }) => {
+const AddNoticeSets: FC<Prop> = ({ toggleAddNew, reloadNoticesets }) => {
   const dispatch = useDispatch();
   const { admin } = useSelector(selectAdmin);
   const reloadAsset = () => {
@@ -29,16 +30,23 @@ const AddNoticeSets: FC<Prop> = ({ toggleAddNew }) => {
     endTime: new Date(),
   };
 
+  const closeAction = () => {
+    toggleAddNew();
+    reloadNoticesets();
+  };
+
   useEffect(() => {
     reloadAsset();
   }, [admin]);
   return (
     <div>
-      <h1>Add NoticeSets</h1>
+      <Typography variant="h4" my={1}>
+        Add NoticeSets
+      </Typography>
       <Paper sx={{ padding: 3, maxWidth: "400px" }}>
         <NoticeSetForm
           purpose="add"
-          closeAction={() => toggleAddNew()}
+          closeAction={closeAction}
           defaultvalues={defaultvalues}
           noticeSetId=""
         />

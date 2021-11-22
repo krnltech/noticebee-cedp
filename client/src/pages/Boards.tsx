@@ -16,7 +16,9 @@ const Boards: FC = () => {
   }, [admin]);
   return (
     <div>
-      <h1>All boards</h1>
+      <Typography variant="h4" my={1}>
+        All boards
+      </Typography>
       {isLoading ? (
         <Typography paragraph>loading . . .</Typography>
       ) : (

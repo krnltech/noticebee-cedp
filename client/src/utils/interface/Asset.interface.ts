@@ -5,6 +5,8 @@ export interface Asset {
   url: string;
   admin: string;
   organization: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface AssetApiResponse {

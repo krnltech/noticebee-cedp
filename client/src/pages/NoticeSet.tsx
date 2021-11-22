@@ -31,12 +31,17 @@ const NoticeSet: FC = () => {
 
   return (
     <div>
-      <h1>ContentLibrary</h1>
+      <Typography variant="h4" my={1}>
+        Notice Sets
+      </Typography>
       <Button onClick={toggleAddNew}>
         {addNew ? "Cancel" : "Add new content"}
       </Button>
       {addNew ? (
-        <AddNoticeSets toggleAddNew={() => toggleAddNew()} />
+        <AddNoticeSets
+          reloadNoticesets={() => reloadNoticesets()}
+          toggleAddNew={() => toggleAddNew()}
+        />
       ) : (
         <AllNoticeSets noticeSets={noticeSets} isLoading={isLoading} />
       )}

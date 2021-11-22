@@ -12,7 +12,9 @@ const BoardComponent: FC<Prop> = ({ board }) => {
   return (
     <Container>
       <Paper>
-        <h1>{board.name}</h1>
+        <Typography variant="h4" my={1}>
+          {board.name}
+        </Typography>
         <Typography paragraph ml={1}>
           <b>Status</b> : Online
         </Typography>

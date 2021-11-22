@@ -30,3 +30,15 @@ export type NoticeSetAddFormData = {
   assets: string[];
   shouldSchedule: boolean;
 };
+
+export type NoticeSetEditDefault = {
+  _id: string;
+  name: string;
+  interval: number | null;
+  startTime: string | null;
+  endTime: string | null;
+  admin: any;
+  organization: any;
+  assets: string[];
+  shouldSchedule: boolean;
+};

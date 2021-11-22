@@ -6,7 +6,7 @@ const AssetSchema = new mongoose.Schema(
     name: { type: String, required: true },
     type: { type: String, required: true },
     url: { type: String, required: true },
-    admin: [{ type: mongoose.Schema.Types.ObjectId, ref: "Admins" }],
+    admin: { type: mongoose.Schema.Types.ObjectId, ref: "Admins" },
     organization: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Organizations",

@@ -118,12 +118,12 @@ export const getNoticeset = async (req: Request, res: Response) => {
       _id: req.params.noticesetId,
     })
       .select("-__v")
-      .populate({ path: "admin", select: "-__v -password", model: AdminModel })
-      .populate({
-        path: "organization",
-        select: "-__v",
-        model: OrganizationModel,
-      })
+      // .populate({ path: "admin", select: "-__v -password", model: AdminModel })
+      // .populate({
+      //   path: "organization",
+      //   select: "-__v",
+      //   model: OrganizationModel,
+      // })
       .populate({
         path: "assets",
         select: "-__v",
@@ -155,6 +155,7 @@ export const addNoticeset = async (req: Request, res: Response) => {
 
 export const editNoticeset = async (req: Request, res: Response) => {
   try {
+    console.log(req.body);
     await NoticeSetModel.updateOne(
       { _id: req.params.noticesetId },
       { $set: req.body }

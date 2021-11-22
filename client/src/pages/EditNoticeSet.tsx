@@ -1,16 +1,15 @@
-import { Paper } from "@mui/material";
-import axios, { AxiosResponse } from "axios";
+import { Paper, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router";
 import { fetchAssets } from "../api/asset.api";
-import { fetchNoticeSet } from "../api/noticeset.api";
+import { fetchNoticeSet as fns } from "../api/noticeset.api";
 import NoticeSetForm from "../components/noticesets/NoticeSetForm";
 import { selectAdmin } from "../redux/slices/adminSlide";
 import { Asset } from "../utils/interface/Asset.interface";
 import {
   NoticeSet,
-  NoticeSetAddFormData,
+  NoticeSetEditDefault,
 } from "../utils/interface/NoticeSet.interface";
 
 const EditNoticeSet = () => {
@@ -31,42 +30,35 @@ const EditNoticeSet = () => {
     fetchNoticeSet();
   }, [admin]);
 
-  //   useEffect(() => {
-  //     setIsLoading(true);
-  //     const noticeset =  fetchNoticeSet(noticeSetId);
-  //     if (noticeSet) {
-  //       setNoticeSet(noticeset);
-  //     }
-  //     setIsLoading(false);
-  //   }, [noticeSetId]);
-
   const fetchNoticeSet = async () => {
     try {
-      const { data }: AxiosResponse<{ noticeset: any }> = await axios.get(
-        `http://localhost:5000/api/admin/noticeset/${noticeSetId}`
-      );
-      console.log(data);
-      const ns = data.noticeset;
-      let nsAssets = noticeSet?.assets;
-      let tAssets: string[] = [];
-      nsAssets?.map((asset: Asset) => {
-        tAssets.push(asset._id);
+      const noticeset: NoticeSet = await fns(noticeSetId);
+      let ns: NoticeSetEditDefault = {
+        _id: noticeset._id,
+        name: noticeset.name,
+        interval: noticeset.interval,
+        startTime: noticeset.startTime,
+        endTime: noticeset.endTime,
+        admin: noticeset.admin,
+        organization: noticeset.organization,
+        shouldSchedule: noticeset.shouldSchedule,
+        assets: [],
+      };
+      noticeset.assets?.map((asset: Asset) => {
+        ns.assets.push(asset._id);
       });
-      ns.assets = tAssets;
-      console.log(ns, tAssets, nsAssets);
       setNoticeSet(ns);
     } catch (error: any) {
+      console.log(error);
       console.log(error.message);
     }
   };
 
-  useEffect(() => {
-    console.log(noticeSet);
-  }, [noticeSet]);
-
   return (
     <div>
-      <h1>Add NoticeSets</h1>
+      <Typography variant="h4" my={1}>
+        Edit NoticeSets
+      </Typography>
       <Paper sx={{ padding: 3, maxWidth: "400px" }}>
         {isLoading ? (
           " . . . loading . . . "

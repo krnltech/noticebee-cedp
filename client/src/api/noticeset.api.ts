@@ -28,41 +28,46 @@ export const fetchNoticeSets = async (
 };
 
 export const fetchNoticeSet = async (noticeSetId: string) => {
-  try {
-    return new Promise(async function (resolve, reject) {
+  return new Promise<NoticeSet>(async function (resolve, reject) {
+    try {
       const { data }: AxiosResponse<{ noticeset: NoticeSet }> = await axios.get(
         `http://localhost:5000/api/admin/noticeset/${noticeSetId}`
       );
       resolve(data.noticeset);
-    });
-  } catch (error: any) {
-    console.log(error.message);
-  }
+    } catch (error: any) {
+      console.log(error.message);
+      reject(error);
+    }
+  });
 };
 
 export const addNoticeset = async (formData: NoticeSetAddFormData) => {
-  try {
-    const { data }: AxiosResponse<NoticeSetAddApiResponse> = await axios.post(
-      "http://localhost:5000/api/admin/noticeset/add",
-      formData
-    );
-    return data.message;
-  } catch (error: any) {
-    return error.message;
-  }
+  return new Promise<string>(async function (resolve, reject) {
+    try {
+      const { data }: AxiosResponse<NoticeSetAddApiResponse> = await axios.post(
+        "http://localhost:5000/api/admin/noticeset/add",
+        formData
+      );
+      resolve(data.message);
+    } catch (error: any) {
+      reject(error);
+    }
+  });
 };
 
 export const editNoticeSet = async (
   formData: NoticeSetAddFormData,
   noticeSetId: string
 ) => {
-  try {
-    const { data }: AxiosResponse<NoticeSetAddApiResponse> = await axios.post(
-      `http://localhost:5000/api/admin/edit/${noticeSetId}`,
-      formData
-    );
-    return data.message;
-  } catch (error: any) {
-    return error.message;
-  }
+  return new Promise<string>(async function (resolve, reject) {
+    try {
+      const { data }: AxiosResponse<NoticeSetAddApiResponse> = await axios.post(
+        `http://localhost:5000/api/admin/noticeset/edit/${noticeSetId}`,
+        formData
+      );
+      resolve(data.message);
+    } catch (error: any) {
+      reject(error);
+    }
+  });
 };

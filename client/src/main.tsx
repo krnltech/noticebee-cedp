@@ -16,9 +16,9 @@ const theme = createTheme({
       main: "#f50057",
     },
   },
-  // typography: {
-  //   fontFamily: 'Roboto',
-  // },
+  typography: {
+    fontFamily: "Lato, sans-serif",
+  },
 });
 
 ReactDOM.render(

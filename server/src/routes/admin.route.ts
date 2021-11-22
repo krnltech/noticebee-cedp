@@ -15,6 +15,6 @@ r.get("/getBoard/:boardId");
 r.get("/noticesets/:adminId", getNoticesets);
 r.get("/noticeset/:noticesetId", getNoticeset);
 r.post("/noticeset/add", addNoticeset);
-r.get("/noticeset/edit/:noticesetId", editNoticeset);
+r.post("/noticeset/edit/:noticesetId", editNoticeset);
 
 export default r;
