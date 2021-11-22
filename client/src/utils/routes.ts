@@ -4,6 +4,7 @@ import Boards from "../pages/Boards";
 import Login from "../pages/Login";
 import NoticeSet from "../pages/NoticeSet";
 import EditNoticeSet from "../pages/EditNoticeSet";
+import EditNoticeBoard from "../pages/EditNoticeBoard";
 
 export default [
   {
@@ -21,14 +22,21 @@ export default [
     private: true,
   },
   {
-    name: "NoticeSets",
+    name: "Edit Noticeboards",
+    component: EditNoticeBoard,
+    path: "/noticeboard/edit/:noticeBoardId",
+    navbar: false,
+    private: true,
+  },
+  {
+    name: "Noticesets",
     component: NoticeSet,
     path: "/noticesets",
     navbar: true,
     private: true,
   },
   {
-    name: "NoticeSets",
+    name: "Edit Noticesets",
     component: EditNoticeSet,
     path: "/noticeset/edit/:noticeSetId",
     navbar: false,

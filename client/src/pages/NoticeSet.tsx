@@ -1,9 +1,6 @@
 import { FC, useEffect, useState } from "react";
-import { Button, Card, Typography } from "@mui/material";
-import CardContent from "@mui/material/CardContent";
-
+import { Button, Container, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-// import Button from "@mui/material/Button";
 import { selectAdmin } from "../redux/slices/adminSlide";
 import { selectNoticeSet } from "../redux/slices/noticesetSlice";
 import { fetchNoticeSets } from "../api/noticeset.api";
@@ -30,7 +27,7 @@ const NoticeSet: FC = () => {
   }, [admin]);
 
   return (
-    <div>
+    <Container>
       <Typography variant="h4" my={1}>
         Notice Sets
       </Typography>
@@ -45,7 +42,7 @@ const NoticeSet: FC = () => {
       ) : (
         <AllNoticeSets noticeSets={noticeSets} isLoading={isLoading} />
       )}
-    </div>
+    </Container>
   );
 };
 

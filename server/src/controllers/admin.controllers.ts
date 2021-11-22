@@ -86,6 +86,20 @@ export const getBoards = async (req: Request, res: Response) => {
   }
 };
 
+export const getBoard = async (req: Request, res: Response) => {
+  try {
+    const board = await BoardModel.findOne({ _id: req.params.boardId });
+    res.json({
+      board,
+    });
+  } catch (error: any) {
+    console.log(error);
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
 export const getNoticesets = async (req: Request, res: Response) => {
   try {
     const noticesets = await NoticeSetModel.find({

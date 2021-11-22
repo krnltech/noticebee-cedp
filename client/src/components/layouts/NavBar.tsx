@@ -17,10 +17,10 @@ import { clearNoticeSets } from "../../redux/slices/noticesetSlice";
 const NavBarLink = styled(NavLink)(({ theme }) => ({
   color: theme.palette.primary.main,
   textDecoration: "none",
-  padding: 12,
+  padding: 8,
   borderRadius: 12,
   fontFamily: `'Raleway','sans-serif'`,
-  fontSize: theme.typography.subtitle1.fontSize,
+  fontSize: theme.typography.subtitle2.fontSize,
   "&:hover": {
     backgroundColor: theme.palette.primary.main,
     color: theme.palette.primary.contrastText,
@@ -30,10 +30,11 @@ const NavBarLink = styled(NavLink)(({ theme }) => ({
 const LogOutLink = styled(Link)(({ theme }) => ({
   color: theme.palette.primary.main,
   textDecoration: "none",
-  padding: 12,
+  padding: 8,
   borderRadius: 12,
   fontFamily: `'Raleway','sans-serif'`,
-  fontSize: theme.typography.subtitle1.fontSize,
+  fontSize: theme.typography.subtitle2.fontSize,
+  cursor: "pointer",
   "&:hover": {
     backgroundColor: theme.palette.primary.main,
     color: theme.palette.primary.contrastText,

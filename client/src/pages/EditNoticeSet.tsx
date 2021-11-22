@@ -31,6 +31,7 @@ const EditNoticeSet = () => {
   }, [admin]);
 
   const fetchNoticeSet = async () => {
+    setIsLoading(true);
     try {
       const noticeset: NoticeSet = await fns(noticeSetId);
       let ns: NoticeSetEditDefault = {
@@ -52,6 +53,7 @@ const EditNoticeSet = () => {
       console.log(error);
       console.log(error.message);
     }
+    setIsLoading(false);
   };
 
   return (

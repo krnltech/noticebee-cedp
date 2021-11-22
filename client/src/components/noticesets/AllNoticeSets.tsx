@@ -36,8 +36,13 @@ const AllNoticeSets: FC<Props> = ({ noticeSets, isLoading }) => {
                 ))}
               </CardContent>
               <CardActions>
-                <Button size="small">Delete</Button>
+                <Button variant="contained" color="error" size="small">
+                  Delete
+                </Button>
                 <Button
+                  variant="contained"
+                  color="primary"
+                  size="small"
                   onClick={() =>
                     history.push(`noticeset/edit/${noticeSet._id}`)
                   }

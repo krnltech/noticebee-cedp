@@ -1,5 +1,5 @@
 import { FC, useEffect } from "react";
-import { Card, Typography } from "@mui/material";
+import { Card, Container, Typography } from "@mui/material";
 import CardContent from "@mui/material/CardContent";
 
 import { useDispatch, useSelector } from "react-redux";
@@ -24,7 +24,7 @@ const ContentLibrary: FC = () => {
   }, [admin]);
   // all/:adminId
   return (
-    <div>
+    <Container>
       <Typography variant="h4" my={1}>
         Content Library
       </Typography>
@@ -43,7 +43,7 @@ const ContentLibrary: FC = () => {
           </CardContent>
         </Card>
       ))}
-    </div>
+    </Container>
   );
 };
 

@@ -4,7 +4,7 @@ import BoardComponent from "../components/boards/BoardComponent";
 import { selectAdmin } from "../redux/slices/adminSlide";
 import { selectBoard } from "../redux/slices/boardSlice";
 import { fetchBoards } from "../api/boards.api";
-import { Typography } from "@mui/material";
+import { Container, Typography } from "@mui/material";
 const Boards: FC = () => {
   const { boards, isLoading } = useSelector(selectBoard);
   const { admin } = useSelector(selectAdmin);
@@ -15,7 +15,7 @@ const Boards: FC = () => {
     }
   }, [admin]);
   return (
-    <div>
+    <Container>
       <Typography variant="h4" my={1}>
         All boards
       </Typography>
@@ -28,7 +28,7 @@ const Boards: FC = () => {
           ))}
         </>
       )}
-    </div>
+    </Container>
   );
 };
 
