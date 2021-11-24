@@ -88,9 +88,49 @@ export const getBoards = async (req: Request, res: Response) => {
 
 export const getBoard = async (req: Request, res: Response) => {
   try {
-    const board = await BoardModel.findOne({ _id: req.params.boardId });
+    const board = await BoardModel.findOne({ _id: req.params.boardId })
+      .select("-__v")
+      .populate({
+        path: "rooms",
+        select: "-__v",
+        model: NoticeSetModel,
+      });
     res.json({
       board,
+    });
+  } catch (error: any) {
+    console.log(error);
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+export const setBoardlayout = async (req: Request, res: Response) => {
+  try {
+    await BoardModel.updateOne(
+      { _id: req.params.boardId },
+      { $set: { type: req.body.type, rooms: req.body.rooms } }
+    );
+    res.json({
+      message: "Successfully updated board layout",
+    });
+  } catch (error: any) {
+    console.log(error);
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+export const setBoardHeadline = async (req: Request, res: Response) => {
+  try {
+    await BoardModel.updateOne(
+      { _id: req.params.boardId },
+      { $set: { headline: req.body.headline } }
+    );
+    res.json({
+      message: "Successfully updated board headline",
     });
   } catch (error: any) {
     console.log(error);

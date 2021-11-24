@@ -23,7 +23,7 @@ const LayoutEditor: FC<Props> = ({ handleLayoutChange, idx, room }) => {
     handleLayoutChange(idx, e.target.value);
   };
   return (
-    <Box>
+    <Box sx={{ width: "100%" }}>
       <FormControl fullWidth>
         <InputLabel id="demo-simple-select-label">
           Select noticeset for this layout
@@ -46,6 +46,9 @@ const LayoutEditor: FC<Props> = ({ handleLayoutChange, idx, room }) => {
           </Select>
         )}
       </FormControl>
+      {/* <FormControl fullWidth>
+        <InputLabel>Select background for this layout</InputLabel>
+      </FormControl> */}
     </Box>
   );
 };

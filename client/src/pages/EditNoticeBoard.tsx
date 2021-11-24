@@ -51,8 +51,8 @@ const EditNoticeBoard = () => {
               <Typography variant="h4" my={1}>
                 Edit noticeboard | {noticeBoard.name}
               </Typography>
-              <EditLayout />
-              <EditHeadline />
+              <EditLayout noticeBoard={noticeBoard} />
+              <EditHeadline noticeBoard={noticeBoard} />
             </>
           ) : (
             <Typography variant="h1" my={1}>
