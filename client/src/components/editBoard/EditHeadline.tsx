@@ -1,42 +1,37 @@
 import { FC, useState } from "react";
 import { Box } from "@mui/system";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { Button, FormControl, Stack, TextField } from "@mui/material";
+import { setBoardHeadline } from "../../api/boards.api";
 import {
-  Button,
-  FormControl,
-  InputLabel,
-  Stack,
-  TextField,
-} from "@mui/material";
-import { setBoardLayout } from "../../api/boards.api";
-import { Board } from "../../utils/interface/Boards.interface";
-
-type BoardHeadlineFormData = {
-  headlineOne: string;
-  headlineTwo: string;
-};
+  BoardHeadlineSetFormData,
+  FetchBoardType,
+} from "../../utils/interface/Boards.interface";
 
 type Props = {
   noticeBoard: FetchBoardType;
 };
 
 const EditHeadline: FC<Props> = ({ noticeBoard }) => {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [edit, setEdit] = useState<boolean>(false);
   const { handleSubmit, register } = useForm({
     defaultValues: {
-      headlineOne: "",
-      headlineTwo: "",
+      headline: noticeBoard.headline || "",
     },
   });
-  const onSubmit: SubmitHandler<BoardHeadlineFormData> = async (formData) => {
+  const onSubmit: SubmitHandler<BoardHeadlineSetFormData> = async (
+    formData
+  ) => {
     setLoading(true);
     let message: string;
     try {
-      message = await setBoardLayout(formData, noticeBoard._id);
+      message = await setBoardHeadline(formData, noticeBoard._id);
     } catch (error: any) {
       message = error.message;
     }
     console.log(message);
+    setEdit(false);
     setLoading(false);
   };
   return (
@@ -45,27 +40,44 @@ const EditHeadline: FC<Props> = ({ noticeBoard }) => {
         <Stack direction="column" spacing={2}>
           <FormControl fullWidth>
             <TextField
-              disabled={loading}
-              label="Primary headline"
+              disabled={loading || !edit}
+              label="RSS Scroll feed"
               multiline
               rows={4}
-              {...register("headlineOne")}
-            />
-          </FormControl>
-          <FormControl fullWidth>
-            <TextField
-              disabled={loading}
-              label="Secondary headline"
-              multiline
-              rows={4}
-              {...register("headlineTwo")}
+              {...register("headline")}
             />
           </FormControl>
         </Stack>
-        <Button disabled={loading} type="submit">
-          Set Headlines
-        </Button>
+        {edit && (
+          <Button
+            disabled={loading}
+            type="submit"
+            variant="contained"
+            color="primary"
+          >
+            Set Headlines
+          </Button>
+        )}
       </form>
+      {edit ? (
+        <Button
+          type="button"
+          variant="outlined"
+          color="error"
+          onClick={() => setEdit(false)}
+        >
+          Cancel
+        </Button>
+      ) : (
+        <Button
+          type="button"
+          variant="outlined"
+          color="primary"
+          onClick={() => setEdit(true)}
+        >
+          Edit Headlines
+        </Button>
+      )}
     </Box>
   );
 };

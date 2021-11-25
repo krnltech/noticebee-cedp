@@ -7,7 +7,7 @@ import { fetchNoticeSets } from "../api/noticeset.api";
 import EditHeadline from "../components/editBoard/EditHeadline";
 import EditLayout from "../components/editBoard/EditLayout";
 import { selectAdmin } from "../redux/slices/adminSlide";
-import { Board } from "../utils/interface/Boards.interface";
+import { FetchBoardType } from "../utils/interface/Boards.interface";
 
 const EditNoticeBoard = () => {
   const [loading, setLoading] = useState<boolean>(true);
@@ -22,12 +22,12 @@ const EditNoticeBoard = () => {
   useEffect(() => {
     reloadNoticesets();
   }, [admin]);
-  const [noticeBoard, setNoticeBoard] = useState<any>();
+  const [noticeBoard, setNoticeBoard] = useState<FetchBoardType>();
   const { noticeBoardId } = useParams<{ noticeBoardId: string }>();
   const fetchNoticeBoard = async () => {
     setLoading(true);
     try {
-      const board = await fetchBoard(noticeBoardId);
+      const board: FetchBoardType = await fetchBoard(noticeBoardId);
       console.log(board);
       setNoticeBoard(board);
     } catch (error) {

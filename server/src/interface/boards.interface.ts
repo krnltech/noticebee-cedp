@@ -4,8 +4,5 @@ export interface Board {
   name: string;
   type: string;
   rooms: Types.ObjectId[];
-  headline: {
-    headlineOne: string;
-    headlineTwo: string;
-  };
+  headline: string;
 }

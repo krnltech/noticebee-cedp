@@ -5,13 +5,10 @@ const BoardsSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
     type: { type: String, default: "one" },
-    room: [
+    rooms: [
       { type: mongoose.Schema.Types.ObjectId, ref: "NoticeSet", default: [] },
     ],
-    headline: {
-      headlineOne: { type: String, default: null },
-      headlineTwo: { type: String, default: null },
-    },
+    headline: { type: String, default: null },
   },
   { timestamps: true }
 );

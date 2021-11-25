@@ -8,12 +8,9 @@ export interface Board {
 export type FetchBoardType = {
   _id: string;
   name: string;
-  type: string;
-  rooms: string[];
-  headline: {
-    headlineOne: string;
-    headlineTwo: string;
-  };
+  type?: string;
+  rooms?: string[];
+  headline?: string;
   createdAt?: string;
   updatedAt?: string;
 };
@@ -23,10 +20,14 @@ export type BoardApiResponse = {
 };
 
 export type BoardHeadlineSetFormData = {
-  headlineOne: string;
-  headlineTwo: string;
+  headline: string;
 };
 
 export type BoardHeadlineEditApiResponse = {
   message: string;
+};
+
+export type LayoutFormData = {
+  room: string[];
+  type: string;
 };

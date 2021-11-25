@@ -4,9 +4,9 @@ import {
   setNoticeSetsError,
   setNoticeSetsLoading,
 } from "../redux/slices/noticesetSlice";
+import { MessageResponse } from "../utils/interface/Axios.interface";
 import {
   NoticeSet,
-  NoticeSetAddApiResponse,
   NoticeSetAddFormData,
   NoticeSetApiResponse,
 } from "../utils/interface/NoticeSet.interface";
@@ -44,7 +44,7 @@ export const fetchNoticeSet = async (noticeSetId: string) => {
 export const addNoticeset = async (formData: NoticeSetAddFormData) => {
   return new Promise<string>(async function (resolve, reject) {
     try {
-      const { data }: AxiosResponse<NoticeSetAddApiResponse> = await axios.post(
+      const { data }: AxiosResponse<MessageResponse> = await axios.post(
         "http://localhost:5000/api/admin/noticeset/add",
         formData
       );
@@ -61,7 +61,7 @@ export const editNoticeSet = async (
 ) => {
   return new Promise<string>(async function (resolve, reject) {
     try {
-      const { data }: AxiosResponse<NoticeSetAddApiResponse> = await axios.post(
+      const { data }: AxiosResponse<MessageResponse> = await axios.post(
         `http://localhost:5000/api/admin/noticeset/edit/${noticeSetId}`,
         formData
       );

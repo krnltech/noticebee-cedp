@@ -88,13 +88,9 @@ export const getBoards = async (req: Request, res: Response) => {
 
 export const getBoard = async (req: Request, res: Response) => {
   try {
-    const board = await BoardModel.findOne({ _id: req.params.boardId })
-      .select("-__v")
-      .populate({
-        path: "rooms",
-        select: "-__v",
-        model: NoticeSetModel,
-      });
+    const board = await BoardModel.findOne({ _id: req.params.boardId }).select(
+      "-__v"
+    );
     res.json({
       board,
     });

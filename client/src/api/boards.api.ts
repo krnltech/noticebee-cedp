@@ -4,11 +4,13 @@ import {
   setBoardsError,
   setBoardsLoading,
 } from "../redux/slices/boardSlice";
+import { MessageResponse } from "../utils/interface/Axios.interface";
 import {
   Board,
   BoardApiResponse,
-  BoardHeadlineEditApiResponse,
   BoardHeadlineSetFormData,
+  FetchBoardType,
+  LayoutFormData,
 } from "../utils/interface/Boards.interface";
 
 export const fetchBoards = async (adminId: string, dispatch: any) => {
@@ -25,7 +27,7 @@ export const fetchBoards = async (adminId: string, dispatch: any) => {
 };
 
 export const fetchBoard = async (noticeBoardId: string) => {
-  return new Promise<Board>(async function (resolve, reject) {
+  return new Promise<FetchBoardType>(async function (resolve, reject) {
     try {
       const { data }: AxiosResponse<{ board: Board }> = await axios.get(
         `http://localhost:5000/api/admin/board/${noticeBoardId}`
@@ -44,11 +46,10 @@ export const setBoardHeadline = async (
 ) => {
   return new Promise<string>(async function (resolve, reject) {
     try {
-      const { data }: AxiosResponse<BoardHeadlineEditApiResponse> =
-        await axios.post(
-          `http://localhost:5000/api/admin/board/set/headline/${boardId}`,
-          { headline: formData }
-        );
+      const { data }: AxiosResponse<MessageResponse> = await axios.post(
+        `http://localhost:5000/api/admin/board/set/headline/${boardId}`,
+        formData
+      );
       resolve(data.message);
     } catch (error: any) {
       reject(error);
@@ -57,16 +58,15 @@ export const setBoardHeadline = async (
 };
 
 export const setBoardLayout = async (
-  formData: BoardHeadlineSetFormData,
+  formData: LayoutFormData,
   boardId: string
 ) => {
   return new Promise<string>(async function (resolve, reject) {
     try {
-      const { data }: AxiosResponse<BoardHeadlineEditApiResponse> =
-        await axios.post(
-          `http://localhost:5000/api/admin/board/set/headline/${boardId}`,
-          formData
-        );
+      const { data }: AxiosResponse<MessageResponse> = await axios.post(
+        `http://localhost:5000/api/admin/board/set/layout/${boardId}`,
+        formData
+      );
       resolve(data.message);
     } catch (error: any) {
       reject(error);

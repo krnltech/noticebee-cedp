@@ -9,9 +9,18 @@ import {
   Stack,
 } from "@mui/material";
 import { Box } from "@mui/system";
-import { FC, useEffect } from "react";
-import { Controller, SubmitHandler, useForm } from "react-hook-form";
-import { FetchBoardType } from "../../utils/interface/Boards.interface";
+import { FC, useEffect, useState } from "react";
+import {
+  Controller,
+  FormProvider,
+  SubmitHandler,
+  useForm,
+} from "react-hook-form";
+import { setBoardLayout } from "../../api/boards.api";
+import {
+  FetchBoardType,
+  LayoutFormData,
+} from "../../utils/interface/Boards.interface";
 import LayoutEditor from "./LayoutEditor";
 
 const layouts: string[] = [
@@ -26,22 +35,20 @@ const layouts: string[] = [
   "two-one-one",
 ];
 
-type LayoutFormData = {
-  room: string[];
-  type: string;
-};
-
 type Props = {
   noticeBoard: FetchBoardType;
 };
 
 const EditLayout: FC<Props> = ({ noticeBoard }) => {
-  const { setValue, control, handleSubmit, watch, reset, getValues } = useForm({
+  const [loading, setLoading] = useState(false);
+  const [edit, setEdit] = useState<boolean>(false);
+  const methods = useForm({
     defaultValues: {
-      type: layouts[0],
-      rooms: [],
+      type: noticeBoard.type || layouts[0],
+      rooms: noticeBoard.rooms || [],
     },
   });
+  const { setValue, control, handleSubmit, watch, reset, getValues } = methods;
 
   const handleLayoutChange = (idx: number, value: string) => {
     let v = `rooms[${idx.toString()}]`;
@@ -49,291 +56,324 @@ const EditLayout: FC<Props> = ({ noticeBoard }) => {
   };
 
   const { type, rooms } = watch();
-  const onsubmit: SubmitHandler<LayoutFormData> = async (data) => {
-    console.log(data);
+  const onsubmit: SubmitHandler<LayoutFormData> = async (formData) => {
+    setLoading(true);
+    let message: string;
+    try {
+      message = await setBoardLayout(formData, noticeBoard._id);
+    } catch (error: any) {
+      message = error.message;
+    }
+    console.log(message);
+    setLoading(false);
   };
 
   useEffect(() => {
-    reset({ ...getValues(), rooms: [] });
+    reset({ ...getValues(), rooms: noticeBoard.rooms });
   }, [type]);
 
   return (
-    <Container>
-      <form onSubmit={handleSubmit(onsubmit)}>
-        <FormControl component="fieldset">
-          <FormLabel component="legend">Select Layout type</FormLabel>
-          <Controller
-            rules={{ required: true }}
-            control={control}
-            name="type"
-            render={({ field }) => (
-              <RadioGroup row {...field}>
-                {layouts.map((layout, id) => (
-                  <FormControlLabel
-                    key={id}
-                    value={layout}
-                    control={<Radio />}
-                    label={layout.toUpperCase()}
-                  />
-                ))}
-              </RadioGroup>
+    <Container sx={{ m: 2 }}>
+      <FormProvider {...methods}>
+        <form onSubmit={handleSubmit(onsubmit)} style={{ margin: "10px" }}>
+          <FormControl component="fieldset">
+            <FormLabel component="legend">Select Layout type</FormLabel>
+            <Controller
+              rules={{ required: true }}
+              control={control}
+              name="type"
+              render={({ field }) => (
+                <RadioGroup row {...field}>
+                  {layouts.map((layout, id) => (
+                    <FormControlLabel
+                      key={id}
+                      value={layout}
+                      control={<Radio disabled={loading || !edit} />}
+                      label={layout.toUpperCase()}
+                    />
+                  ))}
+                </RadioGroup>
+              )}
+            />
+          </FormControl>
+          <Box>
+            {type === "one" && (
+              <Stack direction="row" spacing={2}>
+                <LayoutEditor
+                  edit={edit}
+                  loading={loading}
+                  type={noticeBoard.type}
+                  idx={0}
+                  room={rooms[0]}
+                />
+              </Stack>
             )}
-          />
-        </FormControl>
-        <Box>
-          {type === "one" && (
-            <Stack direction="row" spacing={2}>
-              <LayoutEditor
-                idx={0}
-                handleLayoutChange={(a: number, b: string) =>
-                  handleLayoutChange(a, b)
-                }
-                room={rooms[0]}
-              />
-            </Stack>
-          )}
-          {type === "one-one" && (
-            <Stack direction="row" spacing={2}>
-              <LayoutEditor
-                idx={0}
-                handleLayoutChange={(a: number, b: string) =>
-                  handleLayoutChange(a, b)
-                }
-                room={rooms[0]}
-              />
-              <LayoutEditor
-                idx={1}
-                handleLayoutChange={(a: number, b: string) =>
-                  handleLayoutChange(a, b)
-                }
-                room={rooms[1]}
-              />
-            </Stack>
-          )}
-          {type === "one-two" && (
-            <Stack direction="row" spacing={2}>
-              <LayoutEditor
-                idx={0}
-                handleLayoutChange={(a: number, b: string) =>
-                  handleLayoutChange(a, b)
-                }
-                room={rooms[0]}
-              />
-              <Stack direction="column" spacing={2}>
+            {type === "one-one" && (
+              <Stack direction="row" spacing={2}>
                 <LayoutEditor
-                  idx={1}
-                  handleLayoutChange={(a: number, b: string) =>
-                    handleLayoutChange(a, b)
-                  }
-                  room={rooms[1]}
-                />
-                <LayoutEditor
-                  idx={2}
-                  handleLayoutChange={(a: number, b: string) =>
-                    handleLayoutChange(a, b)
-                  }
-                  room={rooms[2]}
-                />
-              </Stack>
-            </Stack>
-          )}
-          {type === "two-one" && (
-            <Stack direction="row" spacing={2}>
-              <Stack direction="column" spacing={2}>
-                <LayoutEditor
+                  edit={edit}
+                  loading={loading}
+                  type={noticeBoard.type}
                   idx={0}
-                  handleLayoutChange={(a: number, b: string) =>
-                    handleLayoutChange(a, b)
-                  }
                   room={rooms[0]}
                 />
                 <LayoutEditor
+                  edit={edit}
+                  loading={loading}
+                  type={noticeBoard.type}
                   idx={1}
-                  handleLayoutChange={(a: number, b: string) =>
-                    handleLayoutChange(a, b)
-                  }
                   room={rooms[1]}
                 />
               </Stack>
-
-              <LayoutEditor
-                idx={2}
-                handleLayoutChange={(a: number, b: string) =>
-                  handleLayoutChange(a, b)
-                }
-                room={rooms[2]}
-              />
-            </Stack>
-          )}
-          {type === "one-one-one" && (
-            <Stack direction="row" spacing={2}>
-              <LayoutEditor
-                idx={0}
-                handleLayoutChange={(a: number, b: string) =>
-                  handleLayoutChange(a, b)
-                }
-                room={rooms[0]}
-              />
-              <LayoutEditor
-                idx={1}
-                handleLayoutChange={(a: number, b: string) =>
-                  handleLayoutChange(a, b)
-                }
-                room={rooms[1]}
-              />
-              <LayoutEditor
-                idx={2}
-                handleLayoutChange={(a: number, b: string) =>
-                  handleLayoutChange(a, b)
-                }
-                room={rooms[2]}
-              />
-            </Stack>
-          )}
-          {type === "two-two" && (
-            <Stack direction="row" spacing={2}>
-              <Stack direction="column" spacing={2}>
+            )}
+            {type === "one-two" && (
+              <Stack direction="row" spacing={2}>
                 <LayoutEditor
+                  edit={edit}
+                  loading={loading}
+                  type={noticeBoard.type}
                   idx={0}
-                  handleLayoutChange={(a: number, b: string) =>
-                    handleLayoutChange(a, b)
-                  }
+                  room={rooms[0]}
+                />
+                <Stack direction="column" spacing={2}>
+                  <LayoutEditor
+                    edit={edit}
+                    loading={loading}
+                    type={noticeBoard.type}
+                    idx={1}
+                    room={rooms[1]}
+                  />
+                  <LayoutEditor
+                    edit={edit}
+                    loading={loading}
+                    type={noticeBoard.type}
+                    idx={2}
+                    room={rooms[2]}
+                  />
+                </Stack>
+              </Stack>
+            )}
+            {type === "two-one" && (
+              <Stack direction="row" spacing={2}>
+                <Stack direction="column" spacing={2}>
+                  <LayoutEditor
+                    edit={edit}
+                    loading={loading}
+                    type={noticeBoard.type}
+                    idx={0}
+                    room={rooms[0]}
+                  />
+                  <LayoutEditor
+                    edit={edit}
+                    loading={loading}
+                    type={noticeBoard.type}
+                    idx={1}
+                    room={rooms[1]}
+                  />
+                </Stack>
+
+                <LayoutEditor
+                  edit={edit}
+                  loading={loading}
+                  type={noticeBoard.type}
+                  idx={2}
+                  room={rooms[2]}
+                />
+              </Stack>
+            )}
+            {type === "one-one-one" && (
+              <Stack direction="row" spacing={2}>
+                <LayoutEditor
+                  edit={edit}
+                  loading={loading}
+                  type={noticeBoard.type}
+                  idx={0}
                   room={rooms[0]}
                 />
                 <LayoutEditor
+                  edit={edit}
+                  loading={loading}
+                  type={noticeBoard.type}
                   idx={1}
-                  handleLayoutChange={(a: number, b: string) =>
-                    handleLayoutChange(a, b)
-                  }
                   room={rooms[1]}
                 />
-              </Stack>
-
-              <Stack direction="column" spacing={2}>
                 <LayoutEditor
+                  edit={edit}
+                  loading={loading}
+                  type={noticeBoard.type}
                   idx={2}
-                  handleLayoutChange={(a: number, b: string) =>
-                    handleLayoutChange(a, b)
-                  }
+                  room={rooms[2]}
+                />
+              </Stack>
+            )}
+            {type === "two-two" && (
+              <Stack direction="row" spacing={2}>
+                <Stack direction="column" spacing={2}>
+                  <LayoutEditor
+                    edit={edit}
+                    loading={loading}
+                    type={noticeBoard.type}
+                    idx={0}
+                    room={rooms[0]}
+                  />
+                  <LayoutEditor
+                    edit={edit}
+                    loading={loading}
+                    type={noticeBoard.type}
+                    idx={1}
+                    room={rooms[1]}
+                  />
+                </Stack>
+
+                <Stack direction="column" spacing={2}>
+                  <LayoutEditor
+                    edit={edit}
+                    loading={loading}
+                    type={noticeBoard.type}
+                    idx={2}
+                    room={rooms[2]}
+                  />
+                  <LayoutEditor
+                    edit={edit}
+                    loading={loading}
+                    type={noticeBoard.type}
+                    idx={3}
+                    room={rooms[3]}
+                  />
+                </Stack>
+              </Stack>
+            )}
+            {type === "two-one-one" && (
+              <Stack direction="row" spacing={2}>
+                <Stack direction="column" spacing={2}>
+                  <LayoutEditor
+                    edit={edit}
+                    loading={loading}
+                    type={noticeBoard.type}
+                    idx={0}
+                    room={rooms[0]}
+                  />
+                  <LayoutEditor
+                    edit={edit}
+                    loading={loading}
+                    type={noticeBoard.type}
+                    idx={1}
+                    room={rooms[1]}
+                  />
+                </Stack>
+
+                <LayoutEditor
+                  edit={edit}
+                  loading={loading}
+                  type={noticeBoard.type}
+                  idx={2}
                   room={rooms[2]}
                 />
                 <LayoutEditor
+                  edit={edit}
+                  loading={loading}
+                  type={noticeBoard.type}
                   idx={3}
-                  handleLayoutChange={(a: number, b: string) =>
-                    handleLayoutChange(a, b)
-                  }
                   room={rooms[3]}
                 />
               </Stack>
-            </Stack>
-          )}
-          {type === "two-one-one" && (
-            <Stack direction="row" spacing={2}>
-              <Stack direction="column" spacing={2}>
+            )}
+            {type === "one-two-one" && (
+              <Stack direction="row" spacing={2}>
                 <LayoutEditor
+                  edit={edit}
+                  loading={loading}
+                  type={noticeBoard.type}
                   idx={0}
-                  handleLayoutChange={(a: number, b: string) =>
-                    handleLayoutChange(a, b)
-                  }
                   room={rooms[0]}
                 />
-                <LayoutEditor
-                  idx={1}
-                  handleLayoutChange={(a: number, b: string) =>
-                    handleLayoutChange(a, b)
-                  }
-                  room={rooms[1]}
-                />
-              </Stack>
+                <Stack direction="column" spacing={2}>
+                  <LayoutEditor
+                    edit={edit}
+                    loading={loading}
+                    type={noticeBoard.type}
+                    idx={1}
+                    room={rooms[1]}
+                  />
+                  <LayoutEditor
+                    edit={edit}
+                    loading={loading}
+                    type={noticeBoard.type}
+                    idx={2}
+                    room={rooms[2]}
+                  />
+                </Stack>
 
-              <LayoutEditor
-                idx={2}
-                handleLayoutChange={(a: number, b: string) =>
-                  handleLayoutChange(a, b)
-                }
-                room={rooms[2]}
-              />
-              <LayoutEditor
-                idx={3}
-                handleLayoutChange={(a: number, b: string) =>
-                  handleLayoutChange(a, b)
-                }
-                room={rooms[3]}
-              />
-            </Stack>
-          )}
-          {type === "one-two-one" && (
-            <Stack direction="row" spacing={2}>
-              <LayoutEditor
-                idx={0}
-                handleLayoutChange={(a: number, b: string) =>
-                  handleLayoutChange(a, b)
-                }
-                room={rooms[0]}
-              />
-              <Stack direction="column" spacing={2}>
                 <LayoutEditor
-                  idx={1}
-                  handleLayoutChange={(a: number, b: string) =>
-                    handleLayoutChange(a, b)
-                  }
-                  room={rooms[1]}
-                />
-                <LayoutEditor
-                  idx={2}
-                  handleLayoutChange={(a: number, b: string) =>
-                    handleLayoutChange(a, b)
-                  }
-                  room={rooms[2]}
-                />
-              </Stack>
-
-              <LayoutEditor
-                idx={3}
-                handleLayoutChange={(a: number, b: string) =>
-                  handleLayoutChange(a, b)
-                }
-                room={rooms[3]}
-              />
-            </Stack>
-          )}
-          {type === "one-one-two" && (
-            <Stack direction="row" spacing={2}>
-              <LayoutEditor
-                idx={0}
-                handleLayoutChange={(a: number, b: string) =>
-                  handleLayoutChange(a, b)
-                }
-                room={rooms[0]}
-              />
-              <LayoutEditor
-                idx={1}
-                handleLayoutChange={(a: number, b: string) =>
-                  handleLayoutChange(a, b)
-                }
-                room={rooms[1]}
-              />
-              <Stack direction="column" spacing={2}>
-                <LayoutEditor
-                  idx={2}
-                  handleLayoutChange={(a: number, b: string) =>
-                    handleLayoutChange(a, b)
-                  }
-                  room={rooms[2]}
-                />
-                <LayoutEditor
+                  edit={edit}
+                  loading={loading}
+                  type={noticeBoard.type}
                   idx={3}
-                  handleLayoutChange={(a: number, b: string) =>
-                    handleLayoutChange(a, b)
-                  }
                   room={rooms[3]}
                 />
               </Stack>
-            </Stack>
+            )}
+            {type === "one-one-two" && (
+              <Stack direction="row" spacing={2}>
+                <LayoutEditor
+                  edit={edit}
+                  loading={loading}
+                  type={noticeBoard.type}
+                  idx={0}
+                  room={rooms[0]}
+                />
+                <LayoutEditor
+                  edit={edit}
+                  loading={loading}
+                  type={noticeBoard.type}
+                  idx={1}
+                  room={rooms[1]}
+                />
+                <Stack direction="column" spacing={2}>
+                  <LayoutEditor
+                    edit={edit}
+                    loading={loading}
+                    type={noticeBoard.type}
+                    idx={2}
+                    room={rooms[2]}
+                  />
+                  <LayoutEditor
+                    edit={edit}
+                    loading={loading}
+                    type={noticeBoard.type}
+                    idx={3}
+                    room={rooms[3]}
+                  />
+                </Stack>
+              </Stack>
+            )}
+          </Box>
+          {edit && (
+            <Button type="submit" variant="contained" color="primary">
+              Set Layout
+            </Button>
           )}
-        </Box>
-        <Button type="submit">Set Layout</Button>
-      </form>
+        </form>
+      </FormProvider>
+      {edit ? (
+        <Button
+          type="button"
+          variant="outlined"
+          color="error"
+          onClick={() => setEdit(false)}
+        >
+          Cancel
+        </Button>
+      ) : (
+        <Button
+          type="button"
+          variant="outlined"
+          color="primary"
+          onClick={() => setEdit(true)}
+        >
+          Edit Layout
+        </Button>
+      )}
     </Container>
   );
 };
