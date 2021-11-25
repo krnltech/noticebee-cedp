@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
-import axios, { AxiosResponse } from "axios";
+import axios from "../../utils/axios.base";
+import { AxiosResponse } from "axios";
 import {
   Board,
   BoardApiResponse,
@@ -22,7 +23,7 @@ export const fetchBoards = createAsyncThunk(
   "loadBoards",
   async (adminId: any) => {
     const { data }: AxiosResponse<BoardApiResponse> = await axios.get(
-      `http://localhost:5000/api/admin/boards/${adminId}`
+      `/api/admin/boards/${adminId}`
     );
     return data.boards;
   }

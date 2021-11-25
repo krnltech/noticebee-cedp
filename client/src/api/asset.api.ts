@@ -1,4 +1,5 @@
-import axios, { AxiosResponse } from "axios";
+import axios from "../utils/axios.base";
+import { AxiosResponse } from "axios";
 import {
   setAssets,
   setAssetsError,
@@ -10,7 +11,7 @@ export const fetchAssets = async (adminId: string, dispatch: any) => {
   dispatch(setAssetsLoading(true));
   try {
     const { data }: AxiosResponse<AssetApiResponse> = await axios.get(
-      `http://localhost:5000/api/asset/all/${adminId}`
+      `/api/asset/all/${adminId}`
     );
     dispatch(setAssets(data.assets));
   } catch (error: any) {

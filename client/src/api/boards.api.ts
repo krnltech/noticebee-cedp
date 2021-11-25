@@ -1,4 +1,5 @@
-import axios, { AxiosResponse } from "axios";
+import axios from "../utils/axios.base";
+import { AxiosResponse } from "axios";
 import {
   setBoards,
   setBoardsError,
@@ -17,7 +18,7 @@ export const fetchBoards = async (adminId: string, dispatch: any) => {
   dispatch(setBoardsLoading(true));
   try {
     const { data }: AxiosResponse<BoardApiResponse> = await axios.get(
-      `http://localhost:5000/api/admin/boards/${adminId}`
+      `/api/admin/boards/${adminId}`
     );
     dispatch(setBoards(data.boards));
   } catch (error: any) {
@@ -30,7 +31,7 @@ export const fetchBoard = async (noticeBoardId: string) => {
   return new Promise<FetchBoardType>(async function (resolve, reject) {
     try {
       const { data }: AxiosResponse<{ board: Board }> = await axios.get(
-        `http://localhost:5000/api/admin/board/${noticeBoardId}`
+        `/api/admin/board/${noticeBoardId}`
       );
       resolve(data.board);
     } catch (error: any) {
@@ -47,7 +48,7 @@ export const setBoardHeadline = async (
   return new Promise<string>(async function (resolve, reject) {
     try {
       const { data }: AxiosResponse<MessageResponse> = await axios.post(
-        `http://localhost:5000/api/admin/board/set/headline/${boardId}`,
+        `/api/admin/board/set/headline/${boardId}`,
         formData
       );
       resolve(data.message);
@@ -64,7 +65,7 @@ export const setBoardLayout = async (
   return new Promise<string>(async function (resolve, reject) {
     try {
       const { data }: AxiosResponse<MessageResponse> = await axios.post(
-        `http://localhost:5000/api/admin/board/set/layout/${boardId}`,
+        `/api/admin/board/set/layout/${boardId}`,
         formData
       );
       resolve(data.message);

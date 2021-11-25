@@ -6,7 +6,7 @@ type SocketAuthType = {
 };
 
 export const createConnection = (orgId: string, identity: SocketAuthType) => {
-  return io("http://localhost:5000", {
+  return io(import.meta.env.VITE_API_URL, {
     transports: ["websocket"],
     auth: {
       org: orgId,

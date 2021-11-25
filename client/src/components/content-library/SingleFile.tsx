@@ -1,6 +1,7 @@
 import { Button, Stack, TextField, Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import axios from "axios";
+import axios from "../../utils/axios.base";
+import axiosMain from "axios";
 import { FC, useState } from "react";
 import { useSelector } from "react-redux";
 import { selectAdmin } from "../../redux/slices/adminSlide";
@@ -48,7 +49,7 @@ const SingleFile: FC<Prop> = ({ file, removeFromList, reloadAsset }) => {
           axiosRequests.push(
             axios({
               method: "post",
-              url: `http://localhost:5000/api/asset/append`,
+              url: `/api/asset/append`,
               data: chunks[i],
               headers: {
                 Accept: "Application/JSON",
@@ -64,17 +65,14 @@ const SingleFile: FC<Prop> = ({ file, removeFromList, reloadAsset }) => {
             })
           );
         }
-        axios.all(axiosRequests).then(async (info) => {
+        axiosMain.all(axiosRequests).then(async (info) => {
           console.log(info);
-          const { data } = await axios.post(
-            "http://localhost:5000/api/asset/finish",
-            {
-              name,
-              fileName,
-              orgId,
-              adminId,
-            }
-          );
+          const { data } = await axios.post("/api/asset/finish", {
+            name,
+            fileName,
+            orgId,
+            adminId,
+          });
           if (data) {
             removeFromList(file.name);
             reloadAsset();

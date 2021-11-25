@@ -1,4 +1,5 @@
-import axios, { AxiosResponse } from "axios";
+import axios from "../utils/axios.base";
+import { AxiosResponse } from "axios";
 import {
   setNoticeSets,
   setNoticeSetsError,
@@ -18,7 +19,7 @@ export const fetchNoticeSets = async (
   dispatch(setNoticeSetsLoading(true));
   try {
     const { data }: AxiosResponse<NoticeSetApiResponse> = await axios.get(
-      `http://localhost:5000/api/admin/noticesets/${organizationId}`
+      `/api/admin/noticesets/${organizationId}`
     );
     dispatch(setNoticeSets(data.noticesets));
   } catch (error: any) {
@@ -31,7 +32,7 @@ export const fetchNoticeSet = async (noticeSetId: string) => {
   return new Promise<NoticeSet>(async function (resolve, reject) {
     try {
       const { data }: AxiosResponse<{ noticeset: NoticeSet }> = await axios.get(
-        `http://localhost:5000/api/admin/noticeset/${noticeSetId}`
+        `/api/admin/noticeset/${noticeSetId}`
       );
       resolve(data.noticeset);
     } catch (error: any) {
@@ -45,7 +46,7 @@ export const addNoticeset = async (formData: NoticeSetAddFormData) => {
   return new Promise<string>(async function (resolve, reject) {
     try {
       const { data }: AxiosResponse<MessageResponse> = await axios.post(
-        "http://localhost:5000/api/admin/noticeset/add",
+        "/api/admin/noticeset/add",
         formData
       );
       resolve(data.message);
@@ -62,7 +63,7 @@ export const editNoticeSet = async (
   return new Promise<string>(async function (resolve, reject) {
     try {
       const { data }: AxiosResponse<MessageResponse> = await axios.post(
-        `http://localhost:5000/api/admin/noticeset/edit/${noticeSetId}`,
+        `/api/admin/noticeset/edit/${noticeSetId}`,
         formData
       );
       resolve(data.message);

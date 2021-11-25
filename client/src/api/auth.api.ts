@@ -1,4 +1,5 @@
-import axios, { AxiosResponse } from "axios";
+import axios from "../utils/axios.base";
+import { AxiosResponse } from "axios";
 import { LoginResponse } from "../utils/interface/Axios.interface";
 import { setCurrentUser } from "../redux/slices/adminSlide";
 import jwt_decode, { JwtPayload } from "jwt-decode";
@@ -25,7 +26,7 @@ export const loginAdmin = async (
   //   setLoading(true);
   try {
     const { data }: AxiosResponse<LoginResponse> = await axios.post(
-      "http://localhost:5000/api/admin/login",
+      "/api/admin/login",
       {
         email,
         password,
