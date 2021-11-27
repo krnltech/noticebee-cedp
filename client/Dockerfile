@@ -27,6 +27,6 @@ ENTRYPOINT ["/entrypoint.sh"]
 # RUN npm install
 RUN npm run build
 
-# EXPOSE 3000
+EXPOSE 1337
 
-CMD [ "npm", "run", "serve", "--host", "5001" ]
+CMD [ "npm", "run", "serve", "--port", "1337" ]

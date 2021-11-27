@@ -13,11 +13,9 @@ services:
   noticebee-cedp-client:
     build: client/.
     ports:
-      - "5000"
+      - "1337:1337"
     environment:
-      - VITE_API_URL=noticebee-cedp-api
-    depends_on:
-      - noticebee-cedp-api
+      - VITE_API_URL=http://noticebee-cedp-api:1338
   redis:
     image: "redis:alpine"
   # s3cmd:
