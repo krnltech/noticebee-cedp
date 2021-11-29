@@ -17,10 +17,8 @@ function App() {
   const { admin } = useSelector(selectAdmin);
   useEffect(() => {
     if (admin.id) {
-      const io = createConnection(admin.org || "", {
-        id: admin.id,
-        type: "admin",
-      });
+      const io = createConnection();
+      // io.on("updateBoard");
     }
     dispatch(setCurrentUser(getCurrentUser()));
   }, []);
