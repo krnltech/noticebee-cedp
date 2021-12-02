@@ -1,7 +1,7 @@
 version: "3.3"
 services:
   noticebee-cedp-api:
-    image: "kerneltechdev/nbcedp:main"
+    image: "kerneltechdev/nbcedp-api:main"
     ports:
       - "1338:5000"
     environment:
@@ -10,6 +10,12 @@ services:
       - REDIS_PORT=6379
     depends_on:
       - redis
+  noticebee-cedp-client:
+      image: "kerneltechdev/nbcedp-client:main"
+      ports:
+        - "1337:1337"
+      environment:
+        - VITE_API_URL=https://ncedp-api.noticebee.com
   redis:
     image: "redis:alpine"
   watchtower:
