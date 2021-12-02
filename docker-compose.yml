@@ -1,4 +1,4 @@
-version: "3.9"
+version: "3.3"
 services:
   noticebee-cedp-api:
     build: server/.
@@ -15,7 +15,7 @@ services:
     ports:
       - "1337:1337"
     environment:
-      - VITE_API_URL=http://noticebee-cedp-api:1338
+      - VITE_API_URL=https://ncedp-api.noticebee.com
   redis:
     image: "redis:alpine"
   # s3cmd:

@@ -1,7 +1,7 @@
 FROM node:16-alpine
 
-# update packages
-RUN apk update
+# install serve
+RUN npm i -g serve
 
 # create root application folder
 WORKDIR /app
@@ -29,4 +29,4 @@ RUN npm run build
 
 EXPOSE 1337
 
-CMD [ "npm", "run", "serve", "--port", "1337" ]
+CMD [ "serve", "dist", "-p", "1337" ]
