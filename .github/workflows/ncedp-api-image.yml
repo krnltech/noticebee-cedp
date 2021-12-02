@@ -33,3 +33,4 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          build-args: VITE_API_URL=${{secrets.VITE_API_URL}}, PORT=${{secrets.PORT}}, REDIS_HOST=${{secrets.REDIS_HOST}}, REDIS_PORT=${{secrets.REDIS_PORT}}
