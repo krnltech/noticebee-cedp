@@ -11,11 +11,11 @@ services:
     depends_on:
       - redis
   noticebee-cedp-client:
-      image: "kerneltechdev/nbcedp-client:main"
-      ports:
-        - "1337:1337"
-      environment:
-        - VITE_API_URL=https://ncedp-api.noticebee.com
+    image: "kerneltechdev/nbcedp-client:main"
+    ports:
+      - "1337:1337"
+    environment:
+      - VITE_API_URL=https://ncedp-api.noticebee.com
   redis:
     image: "redis:alpine"
   watchtower:
