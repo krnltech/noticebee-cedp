@@ -14,7 +14,7 @@ import { FC, useState } from "react";
 import { useSelector } from "react-redux";
 import { selectAdmin } from "../../redux/slices/adminSlide";
 import CircularProgressWithLabel from "./CircularProgressWithLabel";
-import { Add } from "@mui/icons-material";
+import Tags from "./Tags";
 
 type Prop = {
   file: File;
@@ -33,6 +33,7 @@ const SingleFile: FC<Prop> = ({ file, removeFromList, reloadAsset }) => {
   const cancelUpload = () => {
     removeFromList(file.name);
   };
+
   const upload = (targetFile: File) => {
     setLoading(true);
     try {
@@ -133,6 +134,16 @@ const SingleFile: FC<Prop> = ({ file, removeFromList, reloadAsset }) => {
     }
   };
 
+  const handleTags = () => {
+    if (!tags.includes(tag)) {
+      setTags((oldTags) => [...oldTags, tag]);
+    }
+    setTag("");
+  };
+  const clearTags = (t: string) => {
+    setTags(tags.filter((item) => item !== t));
+  };
+
   return (
     <Paper elevation={3}>
       <Stack
@@ -163,62 +174,14 @@ const SingleFile: FC<Prop> = ({ file, removeFromList, reloadAsset }) => {
               disabled={loading}
               sx={{ width: "100%" }}
             />
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                flexWrap: "nowrap",
-                width: "100%",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
-            >
-              <Autocomplete
-                size="small"
-                id="tags"
-                disabled={loading}
-                disablePortal
-                options={["a", "b"]}
-                onChange={(event: any, newValue: string | null) => {
-                  setTag(newValue as string);
-                }}
-                sx={{ width: "100%" }}
-                renderInput={(params) => (
-                  <TextField
-                    value={tag}
-                    {...params}
-                    label="Tags"
-                    // helperText="Enter tags to add or set"
-                    variant="filled"
-                    type="text"
-                    onChange={(e) => setTag(e.target.value)}
-                  />
-                )}
-              />
-              <Button
-                disabled={loading}
-                variant="contained"
-                color="secondary"
-                onClick={() => {
-                  if (!tags.includes(tag)) {
-                    setTags((oldTags) => [...oldTags, tag]);
-                  }
-                  setTag("");
-                }}
-                sx={{ ml: 1 }}
-              >
-                Add
-              </Button>
-            </Box>
-            {tags.map((t, id) => (
-              <Chip
-                label={t}
-                color="primary"
-                variant="outlined"
-                key={id}
-                onDelete={() => setTags(tags.filter((item) => item !== t))}
-              />
-            ))}
+            <Tags
+              tag={tag}
+              tags={tags}
+              setTag={(a: string) => setTag(a)}
+              handleTags={() => handleTags()}
+              loading={loading}
+              clearTags={(t: string) => clearTags(t)}
+            />
             <Box sx={{ width: "100%" }}>
               <Button
                 sx={{ mr: 1, mt: 1 }}

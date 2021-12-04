@@ -16,10 +16,12 @@
     "@reduxjs/toolkit": "^1.6.2",
     "axios": "^0.23.0",
     "date-fns": "^2.26.0",
+    "draftjs-to-html": "^0.9.1",
     "jwt-decode": "^3.1.2",
     "react": "^17.0.0",
     "react-color": "^2.19.3",
     "react-dom": "^17.0.0",
+    "react-draft-wysiwyg": "^1.14.7",
     "react-dropzone": "^11.4.2",
     "react-hook-form": "^7.17.5",
     "react-redux": "^7.2.5",
@@ -27,10 +29,14 @@
     "socket.io-client": "^4.3.2"
   },
   "devDependencies": {
+    "@types/draft-js": "^0.11.7",
+    "@types/draftjs-to-html": "^0.8.1",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
+    "@types/react-draft-wysiwyg": "^1.13.3",
     "@types/react-router-dom": "^5.3.1",
     "@vitejs/plugin-react": "^1.0.0",
+    "draft-js": "^0.11.7",
     "typescript": "^4.3.2",
     "vite": "^2.6.4"
   }

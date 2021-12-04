@@ -27,9 +27,6 @@ const UploadComponent: FC<Prop> = ({ reloadAsset }) => {
     reloadAsset();
     setFiles(files.filter((item) => item.name !== name));
   };
-  useEffect(() => {
-    console.log(files);
-  }, [files]);
 
   return (
     <Stack direction="column" spacing={2}>

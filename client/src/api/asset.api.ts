@@ -5,7 +5,8 @@ import {
   setAssetsError,
   setAssetsLoading,
 } from "../redux/slices/assetSlice";
-import { AssetApiResponse } from "../utils/interface/Asset.interface";
+import { AssetAdd, AssetApiResponse } from "../utils/interface/Asset.interface";
+import { MessageResponse } from "../utils/interface/Axios.interface";
 
 export const fetchAssets = async (adminId: string, dispatch: any) => {
   dispatch(setAssetsLoading(true));
@@ -18,4 +19,18 @@ export const fetchAssets = async (adminId: string, dispatch: any) => {
     setAssetsError(error.message);
   }
   dispatch(setAssetsLoading(false));
+};
+
+export const addTextAsset = async (formData: AssetAdd) => {
+  return new Promise<string>(async function (resolve, reject) {
+    try {
+      const { data }: AxiosResponse<MessageResponse> = await axios.post(
+        "/api/asset/text/upload",
+        formData
+      );
+      resolve(data.message);
+    } catch (error: any) {
+      reject(error);
+    }
+  });
 };

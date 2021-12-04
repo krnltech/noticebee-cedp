@@ -1,5 +1,16 @@
-import { FC, useEffect, useState } from "react";
-import { Card, Chip, Container, TextField, Typography } from "@mui/material";
+import { ChangeEvent, FC, useEffect, useState } from "react";
+import {
+  Card,
+  Chip,
+  Container,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
+  Radio,
+  RadioGroup,
+  TextField,
+  Typography,
+} from "@mui/material";
 import CardContent from "@mui/material/CardContent";
 
 import { useDispatch, useSelector } from "react-redux";
@@ -9,10 +20,13 @@ import UploadComponent from "../components/content-library/UploadComponent";
 import { selectAdmin } from "../redux/slices/adminSlide";
 import { selectAsset } from "../redux/slices/assetSlice";
 import Loader from "../components/layouts/Loader";
+import RichTextComponent from "../components/content-library/RichTextComponent";
+import ExternalSourceComponent from "../components/content-library/ExternalSourceComponent";
 
 const ContentLibrary: FC = () => {
   // const [addNew, setAddNew] = useState(false);
   const [query, setQuery] = useState<string>("");
+  const [mediaSource, setMediaSource] = useState<string>("media");
   const { assets, isLoading } = useSelector(selectAsset);
   const { admin } = useSelector(selectAdmin);
   const dispatch = useDispatch();
@@ -20,6 +34,10 @@ const ContentLibrary: FC = () => {
     if (admin.id) {
       fetchAssets(admin.id, dispatch);
     }
+  };
+
+  const handleMediaSource = (e: ChangeEvent<HTMLInputElement>) => {
+    setMediaSource((e.target as HTMLInputElement).value);
   };
 
   const handleSearch = (e: any) => {
@@ -38,7 +56,26 @@ const ContentLibrary: FC = () => {
       {/* <Button onClick={() => setAddNew((an) => !an)}>
         {addNew ? "Cancel" : "Add new content"}
       </Button> */}
-      <UploadComponent reloadAsset={() => reloadAsset()} />
+      <FormControl component="fieldset">
+        <RadioGroup row value={mediaSource} onChange={handleMediaSource}>
+          <FormControlLabel value="media" control={<Radio />} label="Media" />
+          <FormControlLabel value="text" control={<Radio />} label="Text" />
+          <FormControlLabel
+            value="external"
+            control={<Radio />}
+            label="External Source"
+          />
+        </RadioGroup>
+      </FormControl>
+      {mediaSource === "media" ? (
+        <UploadComponent reloadAsset={() => reloadAsset()} />
+      ) : mediaSource === "text" ? (
+        <RichTextComponent reloadAsset={() => reloadAsset()} />
+      ) : mediaSource === "external" ? (
+        <ExternalSourceComponent reloadAsset={() => reloadAsset()} />
+      ) : (
+        <></>
+      )}
       <TextField
         id="outlined-search"
         label="Search assets"
@@ -68,7 +105,7 @@ const ContentLibrary: FC = () => {
                   </Typography>
                   <Typography variant="caption">{asset.type}</Typography>
                   <Typography variant="subtitle2">Url:</Typography>
-                  <Typography variant="body1">{asset.url}</Typography>
+                  <Typography variant="body1">{asset.content}</Typography>
                   <Typography variant="subtitle2">Tags:</Typography>
                   {asset.tags?.map((tag, id) => (
                     <Chip

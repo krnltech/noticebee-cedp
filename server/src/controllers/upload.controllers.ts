@@ -7,8 +7,7 @@ import TagModel from "../models/tag.model";
 import s3 from "../utils/s3-uploader";
 
 export const appendUpload = (req: Request, res: Response) => {
-  console.log("append");
-
+  // console.log("append");
   // try {
   //   req.on("data", async (chunk) => {
   //     let name = req.headers["x-values"];
@@ -60,6 +59,7 @@ export const finishUpload = async (req: Request, res: Response) => {
     if (org) {
       const orgName = org.name.replace(/ /g, "");
       let filepath = `kernel/noticebee-cedp/${orgName}/materials`;
+      const file = fs.readFileSync("src/uploads/" + fileName);
       const uploadParams = {
         Bucket: "kernel",
         Key: filepath + "/" + fileName,
@@ -76,10 +76,11 @@ export const finishUpload = async (req: Request, res: Response) => {
           const content = new AssetModel({
             name: name,
             type: fileType,
-            url: data.Location,
+            content: data.Location,
             admin: adminId,
             organization: orgId,
             tags: tags,
+            source: "media",
           });
           const a = await content.save();
           console.log("Upload Success", data);
@@ -142,6 +143,20 @@ export const getAllAssets = async (req: Request, res: Response) => {
       "-__v"
     );
     res.json({ assets });
+  } catch (error: any) {
+    // console.log(error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const textUpload = async (req: Request, res: Response) => {
+  try {
+    const asset = new AssetModel(req.body);
+    await asset.save();
+    res.json({
+      success: true,
+      message: "Successfully uploaded text asset",
+    });
   } catch (error: any) {
     console.log(error);
     res.status(500).json({ message: error.message });
