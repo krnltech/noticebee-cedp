@@ -18,7 +18,7 @@ type Prop = {
 const BoardComponent: FC<Prop> = ({ board }) => {
   const history = useHistory();
   return (
-    <Card>
+    <Card sx={{ mt: 2 }}>
       <CardContent>
         <Typography variant="h4" my={1}>
           {board.name}

@@ -7,3 +7,7 @@ export interface Asset {
   admin: Types.ObjectId;
   organization: Types.ObjectId;
 }
+
+export interface Tag {
+  name: string;
+}

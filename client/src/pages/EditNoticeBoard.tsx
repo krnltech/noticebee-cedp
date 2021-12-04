@@ -6,6 +6,7 @@ import { fetchBoard } from "../api/boards.api";
 import { fetchNoticeSets } from "../api/noticeset.api";
 import EditHeadline from "../components/editBoard/EditHeadline";
 import EditLayout from "../components/editBoard/EditLayout";
+import Loader from "../components/layouts/Loader";
 import { selectAdmin } from "../redux/slices/adminSlide";
 import { FetchBoardType } from "../utils/interface/Boards.interface";
 
@@ -41,9 +42,7 @@ const EditNoticeBoard = () => {
   return (
     <>
       {loading ? (
-        <Typography paragraph my={1}>
-          . . . Loading . . .
-        </Typography>
+        <Loader />
       ) : (
         <Container>
           {noticeBoard ? (

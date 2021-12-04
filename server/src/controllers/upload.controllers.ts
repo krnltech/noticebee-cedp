@@ -3,6 +3,7 @@ import fs from "fs";
 const { exec } = require("child_process");
 import AssetModel from "../models/asset.model";
 import OrganizationModel from "../models/organization.model";
+import TagModel from "../models/tag.model";
 import s3 from "../utils/s3-uploader";
 
 export const appendUpload = (req: Request, res: Response) => {
@@ -45,7 +46,16 @@ export const finishUpload = async (req: Request, res: Response) => {
   // }
   console.log("finish");
   try {
-    const { name, fileName, orgId, adminId } = req.body;
+    const { name, fileName, orgId, adminId, fileType, tags } = req.body;
+    const allTags = await TagModel.find();
+    const newTags = tags.filter(
+      (tag: string) => !allTags.some((t) => t.name === tag)
+    );
+    // console.log(newTags);
+    newTags.map(async (t: string) => {
+      const nTag = new TagModel({ name: t });
+      await nTag.save();
+    });
     const org = await OrganizationModel.findOne({ _id: orgId });
     if (org) {
       const orgName = org.name.replace(/ /g, "");
@@ -63,15 +73,16 @@ export const finishUpload = async (req: Request, res: Response) => {
           throw Error(err.message);
         }
         if (data) {
-          console.log("Upload Success", data);
           const content = new AssetModel({
             name: name,
-            type: "any",
+            type: fileType,
             url: data.Location,
             admin: adminId,
             organization: orgId,
+            tags: tags,
           });
           const a = await content.save();
+          console.log("Upload Success", data);
           if (a) {
             exec(`rm src/uploads/${fileName}`);
             res.json({

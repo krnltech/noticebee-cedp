@@ -8,6 +8,7 @@ import {
 import { FC } from "react";
 import { useHistory } from "react-router";
 import { NoticeSet } from "../../utils/interface/NoticeSet.interface";
+import Loader from "../layouts/Loader";
 
 type Props = {
   noticeSets: NoticeSet[];
@@ -19,7 +20,7 @@ const AllNoticeSets: FC<Props> = ({ noticeSets, isLoading }) => {
   return (
     <div>
       {isLoading ? (
-        <Typography paragraph> . . . loading . . . </Typography>
+        <Loader />
       ) : (
         <>
           {noticeSets.map((noticeSet, id) => (

@@ -5,6 +5,7 @@ import { selectAdmin } from "../redux/slices/adminSlide";
 import { selectBoard } from "../redux/slices/boardSlice";
 import { fetchBoards } from "../api/boards.api";
 import { Container, Typography } from "@mui/material";
+import Loader from "../components/layouts/Loader";
 const Boards: FC = () => {
   const { boards, isLoading } = useSelector(selectBoard);
   const { admin } = useSelector(selectAdmin);
@@ -20,7 +21,7 @@ const Boards: FC = () => {
         All boards
       </Typography>
       {isLoading ? (
-        <Typography paragraph>loading . . .</Typography>
+        <Loader />
       ) : (
         <>
           {boards.map((board, id) => (

@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router";
 import { fetchAssets } from "../api/asset.api";
 import { fetchNoticeSet as fns } from "../api/noticeset.api";
+import Loader from "../components/layouts/Loader";
 import NoticeSetForm from "../components/noticesets/NoticeSetForm";
 import { selectAdmin } from "../redux/slices/adminSlide";
 import { Asset } from "../utils/interface/Asset.interface";
@@ -63,7 +64,7 @@ const EditNoticeSet = () => {
       </Typography>
       <Paper sx={{ padding: 3, maxWidth: "400px" }}>
         {isLoading ? (
-          " . . . loading . . . "
+          <Loader />
         ) : (
           <>
             {noticeSet && (

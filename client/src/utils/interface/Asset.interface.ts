@@ -7,6 +7,7 @@ export interface Asset {
   organization: string;
   createdAt: string;
   updatedAt: string;
+  tags?: string[];
 }
 
 export interface AssetApiResponse {

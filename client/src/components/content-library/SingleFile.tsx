@@ -1,4 +1,12 @@
-import { Button, Stack, TextField, Typography } from "@mui/material";
+import {
+  Autocomplete,
+  Button,
+  Chip,
+  Paper,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { Box } from "@mui/system";
 import axios from "../../utils/axios.base";
 import axiosMain from "axios";
@@ -6,6 +14,7 @@ import { FC, useState } from "react";
 import { useSelector } from "react-redux";
 import { selectAdmin } from "../../redux/slices/adminSlide";
 import CircularProgressWithLabel from "./CircularProgressWithLabel";
+import { Add } from "@mui/icons-material";
 
 type Prop = {
   file: File;
@@ -15,10 +24,15 @@ type Prop = {
 
 const SingleFile: FC<Prop> = ({ file, removeFromList, reloadAsset }) => {
   const [progress, setProgress] = useState<number>(0);
+  const [tags, setTags] = useState<string[]>([]);
+  const [tag, setTag] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [name, setName] = useState<string>("");
   const { admin } = useSelector(selectAdmin);
 
+  const cancelUpload = () => {
+    removeFromList(file.name);
+  };
   const upload = (targetFile: File) => {
     setLoading(true);
     try {
@@ -32,6 +46,7 @@ const SingleFile: FC<Prop> = ({ file, removeFromList, reloadAsset }) => {
         let fileName = `File${Math.random().toString(36).slice(2)}.${ext}`;
         let orgId = admin.org as string;
         let adminId = admin.id as string;
+        let fileType = file.type;
         // if (fileResult.byteLength > CHUNK_SIZE) {
         console.log({ filesize: fileResult.byteLength, chunkCount });
         let chunks: ArrayBuffer[] = [];
@@ -61,7 +76,16 @@ const SingleFile: FC<Prop> = ({ file, removeFromList, reloadAsset }) => {
                 "x-orgid": orgId,
                 "x-adminid": adminId,
               },
-              onUploadProgress: (progressEvent) => console.log(progressEvent),
+              onUploadProgress: (progressEvent) => {
+                let uploadProgress = Math.round((i * 100) / chunks.length);
+
+                // console.log(progressEvent);
+                if (i + 1 === chunks.length) {
+                  setProgress(100);
+                } else {
+                  setProgress(uploadProgress / chunks.length);
+                }
+              },
             })
           );
         }
@@ -72,6 +96,8 @@ const SingleFile: FC<Prop> = ({ file, removeFromList, reloadAsset }) => {
             fileName,
             orgId,
             adminId,
+            fileType,
+            tags,
           });
           if (data) {
             removeFromList(file.name);
@@ -108,44 +134,118 @@ const SingleFile: FC<Prop> = ({ file, removeFromList, reloadAsset }) => {
   };
 
   return (
-    <Stack
-      direction="row"
-      spacing={2}
-      alignItems="center"
-      sx={{
-        borderWidth: 1,
-        borderColor: "primary.main",
-        borderStyle: "solid",
-        padding: 1,
-      }}
-    >
-      <CircularProgressWithLabel value={progress} />
-      <Box>
-        <Stack
-          direction="row"
-          spacing={2}
-          justifyContent="center"
-          alignItems="center"
-        >
-          <TextField
-            size="small"
-            label="Content Name"
-            helperText="Enter a name of the content"
-            variant="filled"
-            type="text"
-            id="name"
-            onChange={(e) => setName(e.target.value)}
-            disabled={loading}
-          />
-          <Button disabled={loading} onClick={handleUpload}>
-            Ok
-          </Button>
-        </Stack>
-        <Typography>
-          <b>Selected File</b> : {file.name}
-        </Typography>
-      </Box>
-    </Stack>
+    <Paper elevation={3}>
+      <Stack
+        direction="row"
+        spacing={2}
+        alignItems="center"
+        sx={{
+          p: 3,
+          mt: 1,
+        }}
+      >
+        <CircularProgressWithLabel value={progress} />
+        <Box>
+          <Stack
+            direction="column"
+            spacing={2}
+            justifyContent="center"
+            alignItems="center"
+          >
+            <TextField
+              size="small"
+              label="Content Name"
+              helperText="Enter a name of the content"
+              variant="filled"
+              type="text"
+              id="name"
+              onChange={(e) => setName(e.target.value)}
+              disabled={loading}
+              sx={{ width: "100%" }}
+            />
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+                flexWrap: "nowrap",
+                width: "100%",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <Autocomplete
+                size="small"
+                id="tags"
+                disabled={loading}
+                disablePortal
+                options={["a", "b"]}
+                onChange={(event: any, newValue: string | null) => {
+                  setTag(newValue as string);
+                }}
+                sx={{ width: "100%" }}
+                renderInput={(params) => (
+                  <TextField
+                    value={tag}
+                    {...params}
+                    label="Tags"
+                    // helperText="Enter tags to add or set"
+                    variant="filled"
+                    type="text"
+                    onChange={(e) => setTag(e.target.value)}
+                  />
+                )}
+              />
+              <Button
+                disabled={loading}
+                variant="contained"
+                color="secondary"
+                onClick={() => {
+                  if (!tags.includes(tag)) {
+                    setTags((oldTags) => [...oldTags, tag]);
+                  }
+                  setTag("");
+                }}
+                sx={{ ml: 1 }}
+              >
+                Add
+              </Button>
+            </Box>
+            {tags.map((t, id) => (
+              <Chip
+                label={t}
+                color="primary"
+                variant="outlined"
+                key={id}
+                onDelete={() => setTags(tags.filter((item) => item !== t))}
+              />
+            ))}
+            <Box sx={{ width: "100%" }}>
+              <Button
+                sx={{ mr: 1, mt: 1 }}
+                disabled={loading}
+                variant="outlined"
+                color="error"
+                onClick={cancelUpload}
+              >
+                Cancel
+              </Button>
+              <Button
+                sx={{ mr: 1, mt: 1 }}
+                disabled={loading}
+                color="primary"
+                variant="contained"
+                onClick={handleUpload}
+              >
+                Upload
+              </Button>
+            </Box>
+          </Stack>
+          <Typography>
+            <b>Selected File</b> : {file.name}
+          </Typography>
+        </Box>
+      </Stack>
+    </Paper>
   );
 };
 

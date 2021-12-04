@@ -1,17 +1,10 @@
-import {
-  CircularProgress,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-} from "@mui/material";
+import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { Box } from "@mui/system";
 import { FC } from "react";
-import { Control, Controller, useFormContext } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
 import { useSelector } from "react-redux";
 import { selectNoticeSet } from "../../redux/slices/noticesetSlice";
-import { LayoutFormData } from "../../utils/interface/Boards.interface";
+import Loader from "../layouts/Loader";
 
 type Props = {
   idx: number;
@@ -28,7 +21,7 @@ const LayoutEditor: FC<Props> = ({ idx, room, loading, edit }) => {
   return (
     <Box sx={{ width: "100%" }}>
       {isLoading ? (
-        <CircularProgress />
+        <Loader />
       ) : (
         <FormControl fullWidth>
           <InputLabel id="demo-simple-select-label">

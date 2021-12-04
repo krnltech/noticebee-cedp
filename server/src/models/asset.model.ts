@@ -11,6 +11,7 @@ const AssetSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Organizations",
     },
+    tags: [{ type: String }],
   },
   { timestamps: true }
 );
