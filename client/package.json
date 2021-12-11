@@ -18,6 +18,7 @@
     "date-fns": "^2.26.0",
     "draftjs-to-html": "^0.9.1",
     "jwt-decode": "^3.1.2",
+    "notistack": "^2.0.3",
     "react": "^17.0.0",
     "react-color": "^2.19.3",
     "react-dom": "^17.0.0",

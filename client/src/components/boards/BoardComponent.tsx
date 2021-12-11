@@ -7,7 +7,7 @@ import {
   Container,
   Typography,
 } from "@mui/material";
-
+import LightbulbIcon from "@mui/icons-material/Lightbulb";
 import { Board } from "../../utils/interface/Boards.interface";
 import { useHistory } from "react-router";
 
@@ -24,7 +24,8 @@ const BoardComponent: FC<Prop> = ({ board }) => {
           {board.name}
         </Typography>
         <Typography paragraph ml={1}>
-          <b>Status</b> : Online
+          <b>Status</b> : <LightbulbIcon color="success" fontSize="small" />{" "}
+          Online
         </Typography>
       </CardContent>
       <CardActions>

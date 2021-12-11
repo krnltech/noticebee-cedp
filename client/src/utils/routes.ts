@@ -7,17 +7,17 @@ import EditNoticeSet from "../pages/EditNoticeSet";
 import EditNoticeBoard from "../pages/EditNoticeBoard";
 
 export default [
-  {
-    name: "Dashboard",
-    component: Dashboard,
-    path: "/",
-    navbar: true,
-    private: true,
-  },
+  // {
+  //   name: "Dashboard",
+  //   component: Dashboard,
+  //   path: "/",
+  //   navbar: true,
+  //   private: true,
+  // },
   {
     name: "Boards",
     component: Boards,
-    path: "/boards",
+    path: "/",
     navbar: true,
     private: true,
   },

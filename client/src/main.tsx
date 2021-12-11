@@ -6,6 +6,7 @@ import { BrowserRouter as Router } from "react-router-dom";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Provider } from "react-redux";
 import { store } from "./redux/store";
+import { SnackbarProvider } from "notistack";
 
 const theme = createTheme({
   palette: {
@@ -26,7 +27,9 @@ ReactDOM.render(
     <Provider store={store}>
       <Router>
         <ThemeProvider theme={theme}>
-          <App />
+          <SnackbarProvider maxSnack={3} autoHideDuration={5000}>
+            <App />
+          </SnackbarProvider>
         </ThemeProvider>
       </Router>
     </Provider>

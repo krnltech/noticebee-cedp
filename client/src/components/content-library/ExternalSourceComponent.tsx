@@ -5,8 +5,10 @@ import Loader from "../layouts/Loader";
 import Tags from "./Tags";
 import { selectAdmin } from "../../redux/slices/adminSlide";
 import { useSelector } from "react-redux";
-import { addTextAsset } from "../../api/asset.api";
+import { addExternalAsset, addTextAsset } from "../../api/asset.api";
 import { AssetAdd } from "../../utils/interface/Asset.interface";
+import { useSnackbar } from "notistack";
+import handleError from "../../utils/errorhandler";
 
 type Props = {
   reloadAsset: () => void;
@@ -18,6 +20,8 @@ const ExternalSourceComponent: FC<Props> = ({ reloadAsset }) => {
   const [content, setContent] = useState<string>("");
   const [tags, setTags] = useState<string[]>([]);
   const [tag, setTag] = useState<string>("");
+
+  const { enqueueSnackbar } = useSnackbar();
 
   const handleTags = () => {
     if (!tags.includes(tag)) {
@@ -44,13 +48,19 @@ const ExternalSourceComponent: FC<Props> = ({ reloadAsset }) => {
       };
       // console.log(asset);
       try {
-        const message = await addTextAsset(asset);
-        console.log(message);
+        const message = await addExternalAsset(asset);
+        // console.log(message);
+        enqueueSnackbar(message, { variant: "success" });
         if (message) {
           reloadAsset();
         }
-      } catch (error) {
+      } catch (error: any) {
         console.log(error);
+        if (error.response) {
+          enqueueSnackbar(error.response?.data?.message, { variant: "error" });
+        } else {
+          enqueueSnackbar(error.message, { variant: "error" });
+        }
       }
     } else {
       alert("Please give a name to file");

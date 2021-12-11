@@ -34,3 +34,17 @@ export const addTextAsset = async (formData: AssetAdd) => {
     }
   });
 };
+
+export const addExternalAsset = async (formData: AssetAdd) => {
+  return new Promise<string>(async function (resolve, reject) {
+    try {
+      const { data }: AxiosResponse<MessageResponse> = await axios.post(
+        "/api/asset/external/upload",
+        formData
+      );
+      resolve(data.message);
+    } catch (error: any) {
+      reject(error);
+    }
+  });
+};

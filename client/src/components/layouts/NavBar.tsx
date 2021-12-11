@@ -67,7 +67,9 @@ const NavBar = () => {
       sx={{ padding: 1, margin: 0, boxShadow: "none" }}
     >
       <Stack direction="row" justifyContent="space-between" alignItems="center">
-        <NavBarTitle to="/">COLLEGE NAME | NOTICEBEE</NavBarTitle>
+        <NavBarTitle to="/">
+          {isAuthenticated ? "COLLEGE NAME |" : ""} NOTICEBEE
+        </NavBarTitle>
         <Stack
           direction="row"
           alignItems="center"

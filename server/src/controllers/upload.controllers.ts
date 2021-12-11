@@ -1,10 +1,11 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import fs from "fs";
-const { exec } = require("child_process");
+import { exec } from "child_process";
 import AssetModel from "../models/asset.model";
 import OrganizationModel from "../models/organization.model";
 import TagModel from "../models/tag.model";
 import s3 from "../utils/s3-uploader";
+import mime from "mime-types";
 
 export const appendUpload = (req: Request, res: Response) => {
   // console.log("append");
@@ -160,5 +161,30 @@ export const textUpload = async (req: Request, res: Response) => {
   } catch (error: any) {
     console.log(error);
     res.status(500).json({ message: error.message });
+  }
+};
+
+export const externalUpload = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    let body = req.body;
+    const url = body.content;
+    body.type = mime.lookup(url);
+    if (body.type) {
+      const asset = new AssetModel(body);
+      await asset.save();
+      res.json({
+        success: true,
+        message: "Successfully uploaded text asset",
+      });
+    } else {
+      throw Error("Wrong file source");
+    }
+  } catch (error: any) {
+    console.log(error);
+    res.status(500).send({ message: error.message });
   }
 };
