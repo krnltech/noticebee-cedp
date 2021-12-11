@@ -10,46 +10,52 @@ import { selectAdmin, setCurrentUser } from "./redux/slices/adminSlide";
 import { withRouter } from "react-router";
 import PrivateRoute from "./components/auth/PrivateRoute";
 import { getCurrentUser } from "./api/auth.api";
-import { createConnection } from "./api/socket.api";
+import { socket as io } from "./api/socket.api";
+import { SocketContext, socket } from "./api/socket.api";
 
 function App() {
   const dispatch = useDispatch();
   const { admin } = useSelector(selectAdmin);
   useEffect(() => {
     if (admin.id) {
-      const io = createConnection();
-      // io.on("updateBoard");
+      // const io = createConnection();
+      io.emit("update", { admin });
+      io.on("updateBoard", (args) => {
+        console.log(args);
+      });
     }
     dispatch(setCurrentUser(getCurrentUser()));
   }, []);
   return (
-    <Box sx={{ margin: 0 }}>
-      <NavBar />
-      <Container maxWidth="xl">
-        <Switch>
-          {routes
-            .filter((rt) => rt.private)
-            .map((rt, id) => (
-              <PrivateRoute
-                key={id}
-                exact={true}
-                path={rt.path}
-                component={rt.component}
-              />
-            ))}
-          {routes
-            .filter((rt) => !rt.private)
-            .map((rt, id) => (
-              <Route
-                key={id}
-                exact={true}
-                path={rt.path}
-                component={rt.component}
-              />
-            ))}
-        </Switch>
-      </Container>
-    </Box>
+    <SocketContext.Provider value={socket}>
+      <Box sx={{ margin: 0 }}>
+        <NavBar />
+        <Container maxWidth="xl">
+          <Switch>
+            {routes
+              .filter((rt) => rt.private)
+              .map((rt, id) => (
+                <PrivateRoute
+                  key={id}
+                  exact={true}
+                  path={rt.path}
+                  component={rt.component}
+                />
+              ))}
+            {routes
+              .filter((rt) => !rt.private)
+              .map((rt, id) => (
+                <Route
+                  key={id}
+                  exact={true}
+                  path={rt.path}
+                  component={rt.component}
+                />
+              ))}
+          </Switch>
+        </Container>
+      </Box>
+    </SocketContext.Provider>
   );
 }
 

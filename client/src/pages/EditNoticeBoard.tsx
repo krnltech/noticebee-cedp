@@ -1,5 +1,5 @@
+import { FC, useEffect, useState } from "react";
 import { Container, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
 import { fetchBoard } from "../api/boards.api";
@@ -10,7 +10,7 @@ import Loader from "../components/layouts/Loader";
 import { selectAdmin } from "../redux/slices/adminSlide";
 import { FetchBoardType } from "../utils/interface/Boards.interface";
 
-const EditNoticeBoard = () => {
+const EditNoticeBoard: FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const { admin } = useSelector(selectAdmin);
   const dispatch = useDispatch();

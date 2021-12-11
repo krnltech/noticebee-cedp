@@ -3,7 +3,6 @@ import cors from "cors";
 import adminRoute from "./routes/admin.route";
 import assetRoute from "./routes/asset.route";
 import boardRoute from "./routes/board.route";
-import mongoose from "mongoose";
 import { createServer } from "http";
 import { Server } from "socket.io";
 import { createAdapter } from "@socket.io/redis-adapter";
@@ -12,6 +11,7 @@ import OrganizationModel from "./models/organization.model";
 import AdminModel from "./models/admin.model";
 import BoardModel from "./models/board.model";
 import jwt from "jwt-decode";
+import connectMongoose from "./utils/mongoose.connection";
 
 const app = express();
 app.use(express.json());
@@ -20,10 +20,6 @@ app.use(cors());
 app.use("/api/admin", adminRoute);
 app.use("/api/asset", assetRoute);
 app.use("/api/board", boardRoute);
-
-mongoose.connection.on("error", (err) => {
-  console.log(err.message);
-});
 
 const server = createServer(app);
 
@@ -55,52 +51,20 @@ const checkForOrganization = async (id: string, type: string, cid: string) => {
 };
 
 io.adapter(createAdapter(pubClient, subClient));
-// const nbn = io;
-// io.on("connection", async (socket) => {
-// console.log(socket.handshake.auth.identity || "");
-// const orgId = socket.handshake.auth.org || "nodOrgId";
-// const connectorType = socket.handshake.auth.identity.type || "nobody";
-// const connectorId = socket.handshake.auth.identity.id || "noId";
-// const checkConnectionValidity = await checkForOrganization(
-//   orgId,
-//   connectorType,
-//   connectorId
-// );
-// if (checkConnectionValidity) {
-//   socket.join(orgId);
-// } else {
-//   socket.disconnect(true);
-// }
-// socket.on("hello", (args) => {
-//   // console.log(socket);
-
-//   socket
-//     .to(orgId)
-//     .emit("hello", { args, orgId, auth: socket.handshake.auth });
-// });
-
-// socket.on("update", (args) => {
-//   console.log(args);
-//   socket.to(orgId).emit("update", { args, orgId });
-// });
-// });
 
 server.listen(PORT || 5000, async () => {
   try {
-    await mongoose.connect(
-      "mongodb+srv://noticebee-cedp:krnl2021@krishibee.lyalt.mongodb.net/noticebee-cedp?retryWrites=true&w=majority"
-    );
+    connectMongoose();
     io.on("connection", async (socket) => {
-      console.log(socket.handshake.auth);
-      const token: string | null = socket.handshake.auth.token;
+      const token: string = socket.handshake.query.token as string;
       if (token) {
-        type a = { boardId: string; orgId?: string; adminId?: string };
+        type TokenType = { boardId: string; orgId?: string; adminId?: string };
 
         try {
-          const decoded: a = await jwt(token);
+          const decoded: TokenType = await jwt(token);
           console.log(decoded);
           if (decoded.orgId) {
-            socket.join(decoded.orgId);
+            // socket.join(decoded.orgId);
             const board = await BoardModel.findOne({
               _id: decoded.boardId,
             })
@@ -112,7 +76,7 @@ server.listen(PORT || 5000, async () => {
               .select("-__v");
             // console.log(board);
             socket.on("update", (args) => {
-              // console.log(args);
+              console.log(args);
               if (decoded.orgId) {
                 socket.to(decoded?.orgId).emit("updateBoard", { args, board });
               }
@@ -124,32 +88,6 @@ server.listen(PORT || 5000, async () => {
       } else {
         socket.disconnect(true);
       }
-
-      // const orgId = socket.handshake.auth.org || "nodOrgId";
-      // const connectorType = socket.handshake.auth.identity.type || "nobody";
-      // const connectorId = socket.handshake.auth.identity.id || "noId";
-      // const checkConnectionValidity = await checkForOrganization(
-      //   orgId,
-      //   connectorType,
-      //   connectorId
-      // );
-      // if (checkConnectionValidity) {
-      //   socket.join(orgId);
-      //   socket.on("hello", (args) => {
-      //     // console.log(socket);
-
-      //     socket
-      //       .to(orgId)
-      //       .emit("hello", { args, orgId, auth: socket.handshake.auth });
-      //   });
-
-      //   socket.on("update", (args) => {
-      //     // console.log(args);
-      //     socket.to(orgId).emit("update", { args, orgId });
-      //   });
-      // } else {
-      //   socket.disconnect(true);
-      // }
     });
   } catch (error: any) {
     console.log(error.message);
