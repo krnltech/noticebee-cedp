@@ -15,4 +15,4 @@ export const socket = io(import.meta.env.VITE_API_URL, {
   },
 });
 
-export const SocketContext = createContext();
+export const SocketContext = createContext({});
