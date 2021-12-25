@@ -15,6 +15,12 @@ COPY src /app/src
 # check files list
 RUN ls -a
 
+ARG ID
+ENV ID $ID
+
+ARG SECRET
+ENV SECRET $SECRET
+
 RUN npm install
 RUN npm run build
 
