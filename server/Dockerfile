@@ -15,10 +15,10 @@ COPY src /app/src
 # check files list
 RUN ls -a
 
-ARG ID
+# ARG ID
 ENV ID $ID
 
-ARG SECRET
+# ARG SECRET
 ENV SECRET $SECRET
 
 RUN npm install
