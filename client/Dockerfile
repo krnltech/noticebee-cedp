@@ -32,4 +32,4 @@ RUN npm run build
 
 EXPOSE 1337
 
-CMD [ "serve", "dist", "-p", "1337" ]
+CMD [ "serve", "-s", "dist", "-p", "1337" ]

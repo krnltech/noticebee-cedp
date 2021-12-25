@@ -16,9 +16,9 @@ import bg from "./logo.svg";
 
 function App() {
   const dispatch = useDispatch();
-  const { admin } = useSelector(selectAdmin);
+  const { admin, isAuthenticated } = useSelector(selectAdmin);
   useEffect(() => {
-    if (admin.id) {
+    if (isAuthenticated && admin.id) {
       // const io = createConnection();
       io.emit("update", { admin });
       io.on("updateBoard", (args) => {
