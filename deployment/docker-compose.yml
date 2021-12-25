@@ -8,6 +8,8 @@ services:
       - PORT=${PORT}
       - REDIS_HOST=${REDIS_HOST}
       - REDIS_PORT=${REDIS_PORT}
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
     depends_on:
       - redis
   noticebee-cedp-client:
@@ -16,12 +18,14 @@ services:
       - "1337:1337"
     environment:
       - VITE_API_URL=${VITE_API_URL}
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
   redis:
     image: "redis:alpine"
   watchtower:
-     image: containrrr/watchtower
-     volumes:
-       - /var/run/docker.sock:/var/run/docker.sock
-     environment:
-       - WATCHTOWER_CLEANUP=true 
-       - WATCHTOWER_LABEL_ENABLE=true
+    image: containrrr/watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - WATCHTOWER_CLEANUP=true
+      - WATCHTOWER_LABEL_ENABLE=true
