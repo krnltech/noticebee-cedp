@@ -8,6 +8,8 @@ services:
       - PORT=${PORT}
       - REDIS_HOST=${REDIS_HOST}
       - REDIS_PORT=${REDIS_PORT}
+      - ID=${ID}
+      - SECRET=${SECRET}
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
     depends_on:
