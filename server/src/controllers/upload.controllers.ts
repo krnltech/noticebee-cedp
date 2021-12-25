@@ -22,6 +22,10 @@ export const appendUpload = (req: Request, res: Response) => {
   // }
   req.on("data", async (chunk) => {
     let filename = req.headers["x-filename"] || " ";
+    var dir = "src/uploads/";
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
     fs.appendFileSync("src/uploads/" + filename.toString(), chunk);
   });
   req.on("end", () => {
