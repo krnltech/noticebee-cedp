@@ -36,5 +36,5 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          # build-args: ID=${{secrets.LINODE_OBJECT_STORAGE_ID}}
-          #   SECRET=${{secrets.LINODE_OBJECT_STORAGE_SECRET}}
+          build-args: ID=${{secrets.LINODE_OBJECT_STORAGE_ID}}
+            SECRET=${{secrets.LINODE_OBJECT_STORAGE_SECRET}}
