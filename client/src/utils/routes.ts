@@ -1,10 +1,11 @@
-import Dashboard from "../pages/Dashboard";
-import ContentLibrary from "../pages/ContentLibrary";
-import Boards from "../pages/Boards";
-import Login from "../pages/Login";
-import NoticeSet from "../pages/NoticeSet";
-import EditNoticeSet from "../pages/EditNoticeSet";
-import EditNoticeBoard from "../pages/EditNoticeBoard";
+import { lazy } from "react";
+const Dashboard = lazy(() => import("../pages/Dashboard"));
+const ContentLibrary = lazy(() => import("../pages/ContentLibrary"));
+const Boards = lazy(() => import("../pages/Boards"));
+const Login = lazy(() => import("../pages/Login"));
+const NoticeSet = lazy(() => import("../pages/NoticeSet"));
+const EditNoticeSet = lazy(() => import("../pages/EditNoticeSet"));
+const EditNoticeBoard = lazy(() => import("../pages/EditNoticeBoard"));
 
 export default [
   // {

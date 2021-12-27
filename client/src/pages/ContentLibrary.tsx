@@ -44,6 +44,8 @@ const ContentLibrary: FC = () => {
     setQuery(e.target.value);
   };
 
+  console.log(assets);
+
   useEffect(() => {
     reloadAsset();
   }, [admin]);
