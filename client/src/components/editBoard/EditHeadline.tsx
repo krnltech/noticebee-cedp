@@ -7,12 +7,16 @@ import {
   BoardHeadlineSetFormData,
   FetchBoardType,
 } from "../../utils/interface/Boards.interface";
+import { selectAdmin } from "../../redux/slices/adminSlide";
+import { useSelector } from "react-redux";
+import { socket as io } from "../../api/socket.api";
 
 type Props = {
   noticeBoard: FetchBoardType;
 };
 
 const EditHeadline: FC<Props> = ({ noticeBoard }) => {
+  const { admin, isAuthenticated } = useSelector(selectAdmin);
   const [loading, setLoading] = useState<boolean>(false);
   const [edit, setEdit] = useState<boolean>(false);
   const { handleSubmit, register } = useForm({
@@ -27,6 +31,7 @@ const EditHeadline: FC<Props> = ({ noticeBoard }) => {
     let message: string;
     try {
       message = await setBoardHeadline(formData, noticeBoard._id);
+      io.emit("update", { admin });
     } catch (error: any) {
       message = error.message;
     }

@@ -22,7 +22,9 @@ import {
   LayoutFormData,
 } from "../../utils/interface/Boards.interface";
 import LayoutEditor from "./LayoutEditor";
-
+import { socket as io } from "../../api/socket.api";
+import { selectAdmin } from "../../redux/slices/adminSlide";
+import { useSelector } from "react-redux";
 const layouts: string[] = [
   "one",
   "one-one",
@@ -40,6 +42,7 @@ type Props = {
 };
 
 const EditLayout: FC<Props> = ({ noticeBoard }) => {
+  const { admin, isAuthenticated } = useSelector(selectAdmin);
   const [loading, setLoading] = useState(false);
   const [edit, setEdit] = useState<boolean>(false);
   const methods = useForm({
@@ -61,6 +64,7 @@ const EditLayout: FC<Props> = ({ noticeBoard }) => {
     let message: string;
     try {
       message = await setBoardLayout(formData, noticeBoard._id);
+      io.emit("update", { admin });
     } catch (error: any) {
       message = error.message;
     }
