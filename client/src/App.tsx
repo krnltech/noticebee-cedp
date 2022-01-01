@@ -10,8 +10,9 @@ import { selectAdmin, setCurrentUser } from "./redux/slices/adminSlide";
 import { withRouter } from "react-router";
 import PrivateRoute from "./components/auth/PrivateRoute";
 import { getCurrentUser } from "./api/auth.api";
-import { socket as io } from "./api/socket.api";
+// import { socket as io } from "./api/socket.api";
 // import { SocketContext } from "./api/socket.api";
+import SocketClient from "./api/socket.client";
 import bg from "./logo.svg";
 import Loader from "./components/layouts/Loader";
 
@@ -20,15 +21,13 @@ function App() {
   const { admin, isAuthenticated } = useSelector(selectAdmin);
   // const io: any = useContext(SocketContext);
   useEffect(() => {
-    if (isAuthenticated && admin.id) {
-      // const io = createConnection();
-      io.emit("update", { admin });
-      io.on("updateBoard", (args) => {
-        console.log(args);
-      });
-    }
+    // if (isAuthenticated && admin.id) {
+    //   // const io = createConnection();
+    //   io.emit("update", { admin });
+    // }
     dispatch(setCurrentUser(getCurrentUser()));
   }, []);
+
   return (
     // <SocketContext.Provider value={io}>
     <Box sx={{ margin: 0 }}>

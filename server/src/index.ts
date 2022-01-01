@@ -52,42 +52,48 @@ const checkForOrganization = async (id: string, type: string, cid: string) => {
 
 io.adapter(createAdapter(pubClient, subClient));
 
+const activeBoards: string[] = [];
+
 server.listen(PORT || 5000, async () => {
   try {
     connectMongoose();
     io.on("connection", async (socket) => {
       const token: string = socket.handshake.query.token as string;
+      type TokenType = { boardId: string; orgid?: string; adminId?: string };
+      let decoded: TokenType = await jwt(token);
+      let board: any;
       if (token) {
-        type TokenType = { boardId: string; orgId?: string; adminId?: string };
-
-        try {
-          const decoded: TokenType = await jwt(token);
-          console.log(decoded);
-          if (decoded.orgId) {
-            // socket.join(decoded.orgId);
-            const board = await BoardModel.findOne({
-              _id: decoded.boardId,
+        if (decoded.boardId) {
+          activeBoards.push(decoded.boardId);
+        }
+        if (decoded.orgid) {
+          socket.join(decoded.orgid);
+          board = await BoardModel.findOne({
+            _id: decoded.boardId,
+          })
+            .populate({
+              path: "rooms",
+              select: "-__v -organization -admin",
+              populate: { path: "assets", select: "-__v" },
             })
-              .populate({
-                path: "rooms",
-                select: "-__v -organization -admin",
-                populate: { path: "assets", select: "-__v" },
-              })
-              .select("-__v");
-            // console.log(board);
-            socket.on("update", (args) => {
-              console.log(args);
-              if (decoded.orgId) {
-                socket.to(decoded?.orgId).emit("updateBoard", { args, board });
-              }
-            });
-          }
-        } catch (error) {
-          socket.disconnect(true);
+            .select("-__v");
+          // console.log(board);
         }
       } else {
         socket.disconnect(true);
       }
+      socket.on("update", (args) => {
+        console.log("updated", decoded?.orgid);
+        socket.broadcast
+          .to(decoded?.orgid as string)
+          .emit("updateBoard", { board: board._id });
+      });
+      socket.on("screenshot", (args) => {});
+      socket.on("contentLoaded", (args) => {});
+      socket.on("activeBoards", () => {
+        console.log(activeBoards);
+        io.emit("allActiveBoards", activeBoards);
+      });
     });
   } catch (error: any) {
     console.log(error.message);
