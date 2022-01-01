@@ -43,6 +43,7 @@ By listening to an event called "sendScreenshot", take a screenshot, upload to t
 {
   "time": "time and date string", //string
   "board": "617146c0180089449dc76d20" //string
+  "url": "image urll" //string
 }
 ```
 
