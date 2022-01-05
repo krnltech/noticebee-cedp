@@ -1,15 +1,17 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import {
+  Box,
   Button,
   Card,
   CardActions,
   CardContent,
-  Container,
+  Modal,
   Typography,
 } from "@mui/material";
 import LightbulbIcon from "@mui/icons-material/Lightbulb";
 import { Board } from "../../utils/interface/Boards.interface";
 import { useHistory } from "react-router";
+import { typography } from "@mui/system";
 
 type Prop = {
   board: Board;
@@ -17,6 +19,9 @@ type Prop = {
 
 const BoardComponent: FC<Prop> = ({ board }) => {
   const history = useHistory();
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
   return (
     <Card sx={{ mt: 2 }}>
       <CardContent>
@@ -29,9 +34,35 @@ const BoardComponent: FC<Prop> = ({ board }) => {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button variant="contained" color="error" size="small">
+        <Button
+          variant="contained"
+          color="error"
+          size="small"
+          onClick={handleOpen}
+        >
           Get a preview
         </Button>
+        <Modal
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box>
+            <Typography variant="h1" my={1}>
+              {new Date().toLocaleDateString()}
+            </Typography>
+            <img src="" alt="" />
+            <Button
+              variant="contained"
+              color="error"
+              size="small"
+              onClick={handleOpen}
+            >
+              Get latest preview
+            </Button>
+          </Box>
+        </Modal>
         <Button
           variant="contained"
           color="primary"
