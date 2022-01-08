@@ -69,6 +69,7 @@ const EditLayout: FC<Props> = ({ noticeBoard }) => {
       message = error.message;
     }
     console.log(message);
+    setEdit(false);
     setLoading(false);
   };
 

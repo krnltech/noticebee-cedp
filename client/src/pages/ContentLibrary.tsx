@@ -92,12 +92,13 @@ const ContentLibrary: FC = () => {
         <>
           {assets
             .filter((asset) => {
-              return asset.name.toLowerCase().includes(query.toLowerCase()) ||
-                (asset.tags && asset.tags?.length !== 0)
-                ? asset.tags?.some((tag) =>
-                    tag.toLowerCase().includes(query.toLowerCase())
-                  )
-                : true;
+              return (
+                asset.name.toLowerCase().includes(query.toLowerCase()) ||
+                asset.tags
+                  ?.join(" ")
+                  .toLowerCase()
+                  .includes(query.toLowerCase())
+              );
             })
             .map((asset, id) => (
               <Card key={id} elevation={3} sx={{ my: 1 }}>

@@ -12,8 +12,8 @@ import PrivateRoute from "./components/auth/PrivateRoute";
 import { getCurrentUser } from "./api/auth.api";
 // import { socket as io } from "./api/socket.api";
 // import { SocketContext } from "./api/socket.api";
-import SocketClient from "./api/socket.client";
-import bg from "./logo.svg";
+// import SocketClient from "./api/socket.client";
+// import bg from "./logo.svg";
 import Loader from "./components/layouts/Loader";
 
 function App() {

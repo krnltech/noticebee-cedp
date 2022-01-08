@@ -10,12 +10,14 @@ import {
 import { selectAdmin } from "../../redux/slices/adminSlide";
 import { useSelector } from "react-redux";
 import { socket as io } from "../../api/socket.api";
+// import SocketClient from "../../api/socket.client";
 
 type Props = {
   noticeBoard: FetchBoardType;
 };
 
 const EditHeadline: FC<Props> = ({ noticeBoard }) => {
+  // const io = new SocketClient();
   const { admin, isAuthenticated } = useSelector(selectAdmin);
   const [loading, setLoading] = useState<boolean>(false);
   const [edit, setEdit] = useState<boolean>(false);

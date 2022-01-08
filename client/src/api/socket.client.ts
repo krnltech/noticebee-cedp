@@ -23,6 +23,7 @@ export default class SocketClient {
   }
 
   emit(eventName: string, data: any) {
+    console.log(eventName, data);
     if (this.socket) {
       this.socket.emit(eventName, data);
     }

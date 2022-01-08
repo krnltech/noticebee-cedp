@@ -10,6 +10,7 @@ import Loader from "../components/layouts/Loader";
 import { selectAdmin } from "../redux/slices/adminSlide";
 import { FetchBoardType } from "../utils/interface/Boards.interface";
 import SocketClient from "../api/socket.client";
+// import { socket as io } from "../api/socket.api";
 
 const EditNoticeBoard: FC = () => {
   const io = new SocketClient();
