@@ -23,6 +23,7 @@ import {
 } from "../../utils/interface/Boards.interface";
 import LayoutEditor from "./LayoutEditor";
 import { socket as io } from "../../api/socket.api";
+import SocketClient from "../../api/socket.client";
 import { selectAdmin } from "../../redux/slices/adminSlide";
 import { useSelector } from "react-redux";
 const layouts: string[] = [
@@ -39,9 +40,10 @@ const layouts: string[] = [
 
 type Props = {
   noticeBoard: FetchBoardType;
+  io: any;
 };
 
-const EditLayout: FC<Props> = ({ noticeBoard }) => {
+const EditLayout: FC<Props> = ({ noticeBoard, io }) => {
   const { admin, isAuthenticated } = useSelector(selectAdmin);
   const [loading, setLoading] = useState(false);
   const [edit, setEdit] = useState<boolean>(false);

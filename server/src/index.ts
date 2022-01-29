@@ -61,6 +61,7 @@ server.listen(PORT || 5000, async () => {
       const token: string = socket.handshake.query.token as string;
       type TokenType = { boardId: string; orgid?: string; adminId?: string };
       let decoded: TokenType = await jwt(token);
+      console.log(decoded);
       let board: any;
       if (token) {
         if (decoded.boardId) {
@@ -83,6 +84,7 @@ server.listen(PORT || 5000, async () => {
         socket.disconnect(true);
       }
       socket.on("update", (args) => {
+        console.log(args);
         console.log("updated", decoded?.orgid);
         socket.broadcast
           .to(decoded?.orgid as string)

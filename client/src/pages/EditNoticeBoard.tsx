@@ -9,11 +9,10 @@ import EditLayout from "../components/editBoard/EditLayout";
 import Loader from "../components/layouts/Loader";
 import { selectAdmin } from "../redux/slices/adminSlide";
 import { FetchBoardType } from "../utils/interface/Boards.interface";
-import SocketClient from "../api/socket.client";
+import io from "../api/socket.client";
 // import { socket as io } from "../api/socket.api";
 
 const EditNoticeBoard: FC = () => {
-  const io = new SocketClient();
   const [loading, setLoading] = useState<boolean>(true);
   const { admin } = useSelector(selectAdmin);
   const dispatch = useDispatch();
@@ -40,7 +39,6 @@ const EditNoticeBoard: FC = () => {
     setLoading(false);
   };
   useEffect(() => {
-    io.connect();
     io.on("updateBoard", (args) => {
       console.log(args);
     });
@@ -60,8 +58,8 @@ const EditNoticeBoard: FC = () => {
               <Typography variant="h4" my={1}>
                 Edit noticeboard | {noticeBoard.name}
               </Typography>
-              <EditLayout noticeBoard={noticeBoard} />
-              <EditHeadline noticeBoard={noticeBoard} />
+              <EditLayout noticeBoard={noticeBoard} io={io} />
+              <EditHeadline noticeBoard={noticeBoard} io={io} />
             </>
           ) : (
             <Typography variant="h1" my={1}>

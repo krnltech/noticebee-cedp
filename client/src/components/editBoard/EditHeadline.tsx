@@ -9,14 +9,15 @@ import {
 } from "../../utils/interface/Boards.interface";
 import { selectAdmin } from "../../redux/slices/adminSlide";
 import { useSelector } from "react-redux";
-import { socket as io } from "../../api/socket.api";
-// import SocketClient from "../../api/socket.client";
+// import { socket as io } from "../../api/socket.api";
+import SocketClient from "../../api/socket.client";
 
 type Props = {
   noticeBoard: FetchBoardType;
+  io: any;
 };
 
-const EditHeadline: FC<Props> = ({ noticeBoard }) => {
+const EditHeadline: FC<Props> = ({ noticeBoard, io }) => {
   // const io = new SocketClient();
   const { admin, isAuthenticated } = useSelector(selectAdmin);
   const [loading, setLoading] = useState<boolean>(false);
